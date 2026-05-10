@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Work - Nalin Narayan
+    </title>
+
+
+    <!-- INTER FONT -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ── Colosseum animation wrapper ── */
+        .colosseum-canvas-wrap {
+            position: relative;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #colosseumCanvas {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        /* HUD overlay */
+        .c-hud {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.65));
+            padding: 14px 18px 14px;
+            pointer-events: none;
+        }
+
+        .c-hud-title {
+            color: #F5DFA0;
+            font-family: Georgia, serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            margin: 0 0 2px;
+        }
+
+        .c-hud-sub {
+            color: #C8B080;
+            font-family: sans-serif;
+            font-size: 11px;
+            margin: 0 0 8px;
+            opacity: 0.88;
+        }
+
+        .c-progress {
+            height: 2px;
+            background: rgba(255,255,255,0.18);
+            border-radius: 2px;
+        }
+
+        .c-progress-fill {
+            height: 100%;
+            background: #C8A050;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        /* Controls */
+        .c-controls {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .c-controls button {
+            background: rgba(0,0,0,0.42);
+            border: 0.5px solid rgba(255,255,255,0.28);
+            color: #F5DFA0;
+            font-family: sans-serif;
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .c-controls button:hover {
+            background: rgba(0,0,0,0.65);
+        }
+
+        /* Stage dots */
+        .c-dots {
+            position: absolute;
+            top: 12px;
+            left: 14px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .c-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.28);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .c-dot.on {
+            background: #C8A050;
+        }
+    </style>
+
+</head>
+
+<body class="work-body">
+
+
+    <!-- NAV -->
+
+    <nav>
+
+        <div class="nav-pill">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="work.html" class="active">
+                Work
+            </a>
+
+            <a href="about_me.html">
+                About
+            </a>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- HERO -->
+
+    <section class="work-hero">
+
+        <h1>
+
+            trust me this is<br>
+            a work page
+
+        </h1>
+
+        <p class="hero-subtitle">
+
+            Rome was not built in a day. Neither Will This Page.
+
+        </p>
+
+
+        <!-- COLOSSEUM -->
+
+        <div class="rome-container">
+
+            <!-- CINEMATIC CONSTRUCTION ANIMATION -->
+            <div class="colosseum-canvas-wrap">
+
+                <canvas id="colosseumCanvas" width="680" height="340"></canvas>
+
+                <div class="c-dots" id="cDots"></div>
+
+                <div class="c-controls">
+                    <button id="cPause">⏸ Pause</button>
+                    <button id="cRestart">↺ Restart</button>
+                </div>
+
+                <div class="c-hud">
+                    <p class="c-hud-title" id="cTitle">Stage 1 — Clearing &amp; Excavation</p>
+                    <p class="c-hud-sub" id="cSub">Workers drain Nero's lake and dig the foundation trenches.</p>
+                    <div class="c-progress"><div class="c-progress-fill" id="cBar"></div></div>
+                </div>
+
+            </div>
+
+            <div class="construction-overlay">
+
+                <div class="beam beam-1"></div>
+
+                <div class="beam beam-2"></div>
+
+                <div class="beam beam-3"></div>
+
+                <div class="beam beam-4"></div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <script src="script.js"></script>
+
+    <script>
+    // ════════════════════════════════════════════════
+    //  COLOSSEUM CONSTRUCTION ANIMATION
+    // ════════════════════════════════════════════════
+    (function(){
+        const cv  = document.getElementById('colosseumCanvas');
+        const ctx = cv.getContext('2d');
+        const W = 680, H = 340;
+
+        const STAGE_DUR = 360;
+        const TOTAL     = 6;
+
+        let stageIdx = 0, t = 0, globalT = 0, paused = false;
+
+        const stages = [
+            { title:"Stage 1 — Clearing & Excavation (70 AD)",       sub:"Workers drain Nero's lake and dig the foundation trenches." },
+            { title:"Stage 2 — Laying the Foundations (71 AD)",       sub:"Travertine limestone blocks form the elliptical foundation ring." },
+            { title:"Stage 3 — First Arched Tiers (72–75 AD)",        sub:"Stonemasons build barrel vaults; wooden centring supports each arch." },
+            { title:"Stage 4 — Upper Storeys & Façade (76–79 AD)",    sub:"Doric, Ionic, and Corinthian columns rise on the exterior." },
+            { title:"Stage 5 — Seating & Hypogeum (79–80 AD)",        sub:"Marble seats installed; underground tunnels carved for gladiators." },
+            { title:"Stage 6 — Grand Inauguration (80 AD)",           sub:"Emperor Titus opens the Colosseum with 100 days of games." },
+        ];
+
+        // ── palette ──────────────────────────────────
+        const STONE  = '#C8A96A', STONE2 = '#D4B87A', STONE3 = '#DCC082';
+        const DARK   = '#7A5830', WOOD   = '#8B6914';
+        const SKIN   = '#CD853F', TUNIC  = '#8B4513', TUNIC2 = '#6B3410';
+        const GROUND = '#9A7A50', GTOP   = '#B09060';
+
+        // ── utils ─────────────────────────────────────
+        function lerp(a,b,t){ return a+(b-a)*t; }
+        function ease(t){ return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2; }
+        function clamp(v,lo,hi){ return Math.max(lo,Math.min(hi,v)); }
+
+        function skyColor(p){
+            return `rgb(${Math.round(106+p*60)},${Math.round(174+p*40)},${Math.round(214-p*30)})`;
+        }
+
+        // ── draw helpers ──────────────────────────────
+        function drawSky(p){
+            const g = ctx.createLinearGradient(0,0,0,220);
+            g.addColorStop(0, skyColor(p));
+            g.addColorStop(1,'#E8D8A0');
+            ctx.fillStyle = g; ctx.fillRect(0,0,W,220);
+        }
+
+        function drawSun(p){
+            const sx = lerp(560,520,p), sy = lerp(82,55,p);
+            ctx.beginPath(); ctx.arc(sx,sy,26,0,Math.PI*2);
+            ctx.fillStyle = p>.8?'#FFB020':'#FFD700'; ctx.fill();
+            if(p>.8){
+                for(let i=0;i<8;i++){
+                    const a = i*Math.PI/4 + globalT*.01;
+                    ctx.beginPath();
+                    ctx.moveTo(sx+Math.cos(a)*28, sy+Math.sin(a)*28);
+                    ctx.lineTo(sx+Math.cos(a)*38, sy+Math.sin(a)*38);
+                    ctx.strokeStyle='rgba(255,200,0,0.55)'; ctx.lineWidth=2; ctx.stroke();
+                }
+            }
+        }
+
+        function drawClouds(){
+            const off = globalT * .12;
+            [[100,38],[380,55],[560,28]].forEach(([cx,cy])=>{
+                const x = (cx + off) % 750 - 50;
+                ctx.fillStyle='rgba(255,255,255,0.82)';
+                ctx.beginPath(); ctx.ellipse(x,cy,42,15,0,0,Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(x+20,cy-8,28,13,0,0,Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(x-18,cy-4,22,11,0,0,Math.PI*2); ctx.fill();
+            });
+        }
+
+        function drawGround(){
+            ctx.fillStyle = GTOP; ctx.fillRect(0,272,W,8);
+            ctx.fillStyle = GROUND; ctx.fillRect(0,280,W,60);
+        }
+
+        function drawTrees(){
+            [[28,248],[54,254],[620,248],[648,254]].forEach(([tx,ty],i)=>{
+                ctx.fillStyle='#5C4020'; ctx.fillRect(tx,ty,5,ty===248?24:18);
+                ctx.fillStyle = i%2===0?'#3A7D44':'#2E6B38';
+                ctx.beginPath(); ctx.ellipse(tx+2.5,ty-10,13,16,0,0,Math.PI*2); ctx.fill();
+            });
+        }
+
+        function worker(x,y,dir,tool,tc,sc,wobble){
+            ctx.save();
+            if(dir<0){ ctx.scale(-1,1); ctx.translate(-2*x,0); }
+            const bob = Math.sin(globalT*.15+x)*wobble;
+            ctx.fillStyle=sc; ctx.beginPath(); ctx.arc(x,y-16+bob,4,0,Math.PI*2); ctx.fill();
+            ctx.fillStyle=tc; ctx.fillRect(x-4,y-12+bob,8,11);
+            ctx.strokeStyle=tc; ctx.lineWidth=2;
+            const ls = Math.sin(globalT*.2+x)*2;
+            ctx.beginPath(); ctx.moveTo(x,y-1+bob); ctx.lineTo(x-3+ls,y+8); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(x,y-1+bob); ctx.lineTo(x+3-ls,y+8); ctx.stroke();
+            ctx.strokeStyle=sc; ctx.lineWidth=1.2;
+            const as = Math.sin(globalT*.2+x)*3;
+            ctx.beginPath(); ctx.moveTo(x-2,y-10+bob); ctx.lineTo(x+8,y-6+as+bob); ctx.stroke();
+            if(tool==='shovel'){
+                ctx.strokeStyle='#5C4020'; ctx.lineWidth=1.5;
+                ctx.beginPath(); ctx.moveTo(x+8,y-6+as+bob); ctx.lineTo(x+16,y+8+bob); ctx.stroke();
+                ctx.fillStyle='#8B6914'; ctx.beginPath(); ctx.ellipse(x+17,y+9+bob,3,2,.3,0,Math.PI*2); ctx.fill();
+            } else if(tool==='pick'){
+                ctx.strokeStyle='#5C4020'; ctx.lineWidth=1.5;
+                const pa = Math.sin(globalT*.15+x)*.5;
+                ctx.beginPath(); ctx.moveTo(x+6,y-8+bob); ctx.lineTo(x+18+Math.cos(pa)*3,y+4+Math.sin(pa)*3+bob); ctx.stroke();
+            } else if(tool==='carry'){
+                ctx.fillStyle='#C4A870'; ctx.fillRect(x+3,y-14+bob,16,9);
+                ctx.strokeStyle='#9A7840'; ctx.lineWidth=.5; ctx.strokeRect(x+3,y-14+bob,16,9);
+            } else if(tool==='point'){
+                ctx.strokeStyle=sc; ctx.lineWidth=1.2;
+                ctx.beginPath(); ctx.moveTo(x+4,y-10+bob); ctx.lineTo(x+18,y-14+bob); ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        function archRow(x,y,w,count,h,fill,border){
+            const aw = w/count;
+            for(let i=0;i<count;i++){
+                const ax = x+i*aw;
+                ctx.fillStyle=fill; ctx.fillRect(ax,y,aw,h);
+                ctx.strokeStyle=border; ctx.lineWidth=.5; ctx.strokeRect(ax,y,aw,h);
+                const arrW=aw*.55, arrX=ax+(aw-arrW)/2;
+                ctx.fillStyle=DARK;
+                ctx.beginPath();
+                ctx.moveTo(arrX,y+h); ctx.lineTo(arrX,y+8);
+                ctx.quadraticCurveTo(ax+aw/2,y-5,arrX+arrW,y+8);
+                ctx.lineTo(arrX+arrW,y+h); ctx.closePath(); ctx.fill();
+            }
+            ctx.fillStyle='#B09050'; ctx.fillRect(x,y+h,w,5);
+        }
+
+        function scaffolding(x,y,w,h){
+            ctx.strokeStyle='rgba(139,105,20,0.55)'; ctx.lineWidth=1;
+            const cols=7, rows=4, cw=w/cols, rh=h/rows;
+            for(let c=0;c<=cols;c++){ ctx.beginPath(); ctx.moveTo(x+c*cw,y); ctx.lineTo(x+c*cw,y+h); ctx.stroke(); }
+            for(let r=0;r<=rows;r++){ ctx.beginPath(); ctx.moveTo(x,y+r*rh); ctx.lineTo(x+w,y+r*rh); ctx.stroke(); }
+            ctx.lineWidth=.6;
+            for(let c=0;c<cols;c++) for(let r=0;r<rows;r++) if((c+r)%2===0){
+                ctx.beginPath(); ctx.moveTo(x+c*cw,y+r*rh); ctx.lineTo(x+(c+1)*cw,y+(r+1)*rh); ctx.stroke();
+            }
+        }
+
+        // ── stage renderers ───────────────────────────
+        function renderStage(si, localP, alpha){
+            ctx.save();
+            if(alpha<1) ctx.globalAlpha = alpha;
+            const p = ease(clamp(localP*1.2,0,1));
+            const bx=145, bw=390;
+
+            if(si===0){
+                const pitW = lerp(0,300,p);
+                ctx.fillStyle='#6B4F2A'; ctx.fillRect(340-pitW/2,218,pitW,52);
+                ctx.fillStyle='#7A5C34'; ctx.fillRect(340-pitW/2,213,pitW,20);
+                ctx.fillStyle='#9A7A4A';
+                ctx.beginPath(); ctx.ellipse(180,268,Math.min(pitW*.1,25),10,0,0,Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(510,268,Math.min(pitW*.1,28),11,0,0,Math.PI*2); ctx.fill();
+                if(p>.15){ worker(220,242,1,'shovel',TUNIC,SKIN,1.5); worker(270,240,-1,'pick',TUNIC2,SKIN,1.5); worker(340,242,1,'shovel',TUNIC,SKIN,1.5); }
+                if(p>.35){ worker(400,240,-1,'shovel',TUNIC,SKIN,1.5); worker(450,242,1,'pick',TUNIC2,SKIN,1.5); worker(310,240,-1,'shovel',TUNIC,SKIN,1.5); }
+                if(p>.5){
+                    worker(160,250,1,'point','#4A2800','#8B6914',.5);
+                    ctx.fillStyle='#7B5E2A'; ctx.fillRect(88,256,38,16);
+                    ctx.fillStyle='#5C4020';
+                    ctx.beginPath(); ctx.arc(95,274,6,0,Math.PI*2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(120,274,6,0,Math.PI*2); ctx.fill();
+                    ctx.fillStyle='#7A6040'; ctx.fillRect(58,257,32,14);
+                }
+                if(p>.3){
+                    ctx.strokeStyle='#8B7355'; ctx.lineWidth=1.2; ctx.setLineDash([5,4]);
+                    ctx.beginPath(); ctx.moveTo(200,213); ctx.lineTo(200,190); ctx.lineTo(480,190); ctx.lineTo(480,213); ctx.stroke();
+                    ctx.setLineDash([]);
+                    ctx.fillStyle='#4A3010'; ctx.font='10px sans-serif'; ctx.textAlign='center';
+                    ctx.fillText('measurement rope',340,185);
+                }
+            }
+
+            if(si===1){
+                const ringA = lerp(0,Math.PI*2,p);
+                ctx.save(); ctx.globalAlpha*=.4; ctx.strokeStyle='#B8956A'; ctx.lineWidth=lerp(0,22,p);
+                ctx.beginPath(); ctx.ellipse(340,255,155,28,0,0,ringA); ctx.stroke(); ctx.restore();
+                ctx.strokeStyle='#C8A96A'; ctx.lineWidth=10;
+                ctx.beginPath(); ctx.ellipse(340,252,155,28,0,0,ringA); ctx.stroke();
+                const blocks = Math.floor(p*8);
+                for(let i=0;i<blocks;i++){
+                    ctx.fillStyle='#C4A870'; ctx.fillRect(185+i*44,248,38,16);
+                    ctx.strokeStyle='#9A7840'; ctx.lineWidth=.5; ctx.strokeRect(185+i*44,248,38,16);
+                }
+                ctx.strokeStyle='#8B7355'; ctx.lineWidth=4;
+                ctx.beginPath(); ctx.moveTo(75,270); ctx.lineTo(220,248); ctx.stroke();
+                if(p>.2){ worker(120,262,1,'carry',TUNIC,SKIN,1.2); worker(155,257,1,'carry',TUNIC2,SKIN,1.2); }
+                if(p>.4){ worker(185,252,-1,'carry',TUNIC,SKIN,1.2); worker(400,253,-1,'carry',TUNIC,SKIN,1.2); }
+                if(p>.55){ worker(440,253,1,'carry',TUNIC2,SKIN,1.2); worker(470,253,-1,'carry',TUNIC,SKIN,1.2); }
+                if(p>.65){
+                    ctx.fillStyle='#B0A090'; ctx.fillRect(520,250,22,18);
+                    worker(525,248,-1,'shovel',TUNIC,SKIN,1.5); worker(555,255,1,'shovel',TUNIC2,SKIN,1.5);
+                }
+                ctx.fillStyle='#4A3010'; ctx.font='11px sans-serif'; ctx.textAlign='center';
+                ctx.fillText('elliptical foundation ring — 188 × 156 m',340,295);
+            }
+
+            if(si===2){
+                archRow(bx,235,bw,11,34,STONE,'#B0906A');
+                if(p>.3) archRow(bx+10,198,bw-20,Math.floor(lerp(0,10,p)),32,STONE2,'#BCA070');
+                if(p>.1) scaffolding(155,125,370,115);
+                const ww=[
+                    {x:200,y:210,d:1,t:'carry',th:.15},{x:260,y:210,d:-1,t:'shovel',th:.2},
+                    {x:320,y:210,d:1,t:'carry',th:.25},{x:380,y:210,d:-1,t:'point',th:.3},
+                    {x:440,y:210,d:1,t:'carry',th:.35},{x:490,y:210,d:-1,t:'shovel',th:.4},
+                    {x:230,y:168,d:1,t:'carry',th:.45},{x:300,y:168,d:-1,t:'shovel',th:.5},
+                    {x:370,y:168,d:1,t:'carry',th:.55},{x:420,y:168,d:-1,t:'carry',th:.6},
+                    {x:280,y:142,d:1,t:'carry',th:.7},{x:350,y:142,d:-1,t:'point',th:.75},
+                    {x:130,y:265,d:1,t:'carry',th:.1},{x:160,y:265,d:1,t:'carry',th:.1},
+                ];
+                ww.forEach(w=>{ if(p>w.th) worker(w.x,w.y,w.d,w.t,TUNIC,SKIN,1.5); });
+                if(p>.6){
+                    const ky = lerp(110,154,p);
+                    ctx.fillStyle='#DAB878'; ctx.fillRect(320,ky,20,14);
+                    ctx.strokeStyle='#8B7355'; ctx.lineWidth=1.5;
+                    ctx.beginPath(); ctx.moveTo(330,ky); ctx.lineTo(330,120); ctx.lineTo(312,112); ctx.stroke();
+                }
+            }
+
+            if(si===3){
+                archRow(bx,235,bw,11,34,STONE,'#B0906A');
+                archRow(bx+8,198,bw-16,10,32,STONE2,'#BCA070');
+                if(p>.3) archRow(bx+18,163,bw-36,Math.floor(lerp(0,9,p)),30,STONE3,'#C4A878');
+                if(p>.6){
+                    const ah = lerp(0,28,ease((p-.6)/.4));
+                    ctx.fillStyle='#D8B878'; ctx.fillRect(bx+26,138,bw-52,ah);
+                    ctx.strokeStyle='#B09050'; ctx.lineWidth=.5; ctx.strokeRect(bx+26,138,bw-52,ah);
+                    for(let i=0;i<8;i++){ ctx.fillStyle='#8B7040'; ctx.fillRect(bx+36+i*42,143,16,16); }
+                }
+                if(p>.4) scaffolding(bx+20,100,bw-40,65);
+                if(p>.2){ worker(200,133,1,'carry',TUNIC,SKIN,1.2); worker(260,133,-1,'point','#4A2800','#8B6914',.4); }
+                if(p>.5){ worker(310,133,1,'carry',TUNIC,SKIN,1.2); worker(380,133,-1,'carry',TUNIC2,SKIN,1.2); worker(430,133,1,'shovel',TUNIC2,SKIN,1.5); }
+                if(p>.15){ worker(120,257,1,'pick',TUNIC,SKIN,1.5); worker(520,257,-1,'pick',TUNIC2,SKIN,1.5); }
+                ctx.fillStyle='#3A2810'; ctx.font='10px sans-serif'; ctx.textAlign='left';
+                ctx.fillText('Doric',bx-38,250); ctx.fillText('Ionic',bx-38,212);
+                if(p>.3) ctx.fillText('Corinthian',bx-70,177);
+            }
+
+            if(si===4){
+                archRow(bx,235,bw,11,34,STONE,'#B0906A');
+                archRow(bx+8,198,bw-16,10,32,STONE2,'#BCA070');
+                archRow(bx+18,163,bw-36,9,30,STONE3,'#C4A878');
+                ctx.fillStyle='#D8B878'; ctx.fillRect(bx+26,138,bw-52,28);
+                ctx.strokeStyle='#B09050'; ctx.lineWidth=.5; ctx.strokeRect(bx+26,138,bw-52,28);
+                for(let i=0;i<8;i++){ ctx.fillStyle='#8B7040'; ctx.fillRect(bx+36+i*42,143,16,16); }
+                ctx.fillStyle='#C8A050'; ctx.fillRect(bx+20,133,bw-40,8);
+                if(p>.25){
+                    for(let ti=0;ti<Math.floor(lerp(0,8,p));ti++){
+                        ctx.fillStyle='#E8D0A0'; ctx.fillRect(390+ti*12,232-ti*12,bw-10-(390+ti*12-bx),8);
+                        ctx.strokeStyle='#C4A870'; ctx.lineWidth=.3; ctx.strokeRect(390+ti*12,232-ti*12,bw-10-(390+ti*12-bx),8);
+                    }
+                }
+                ctx.fillStyle='#D4B87A'; ctx.fillRect(235,232,160,8);
+                if(p>.5){
+                    const hA = ease((p-.5)/.5);
+                    ctx.fillStyle='#6B4F2A'; ctx.fillRect(225,250,Math.floor(230*hA),22);
+                    for(let c=0;c<Math.floor(6*hA);c++){ ctx.fillStyle='#8B6040'; ctx.fillRect(240+c*34,252,20,18); }
+                    ctx.fillStyle='#E8D8B0'; ctx.font='10px sans-serif'; ctx.textAlign='center';
+                    ctx.fillText('hypogeum tunnels',340,265);
+                }
+                if(p>.15){ worker(405,218,1,'carry',TUNIC,SKIN,1.2); worker(430,206,-1,'carry',TUNIC2,SKIN,1.2); }
+                if(p>.35) worker(455,196,1,'carry',TUNIC,SKIN,1.2);
+                if(p>.5){ worker(255,247,1,'pick','#4A2800','#7A4A20',1.5); worker(310,247,-1,'shovel','#4A2800','#7A4A20',1.5); worker(360,247,1,'carry','#4A2800','#7A4A20',1.2); }
+                if(p>.55){
+                    ctx.strokeStyle='#8B7355'; ctx.lineWidth=1.5;
+                    ctx.beginPath(); ctx.moveTo(340,232); ctx.lineTo(340,220); ctx.stroke();
+                    ctx.fillStyle='#9A8050'; ctx.fillRect(332,214,16,10);
+                    ctx.fillStyle='#4A3010'; ctx.font='10px sans-serif'; ctx.textAlign='left'; ctx.fillText('lift shaft',347,222);
+                }
+            }
+
+            if(si===5){
+                archRow(bx,235,bw,11,34,STONE,'#B0906A');
+                archRow(bx+8,198,bw-16,10,32,STONE2,'#BCA070');
+                archRow(bx+18,163,bw-36,9,30,STONE3,'#C4A878');
+                ctx.fillStyle='#D8B878'; ctx.fillRect(bx+26,138,bw-52,28);
+                ctx.strokeStyle='#B09050'; ctx.lineWidth=.5; ctx.strokeRect(bx+26,138,bw-52,28);
+                for(let i=0;i<8;i++){ ctx.fillStyle='#8B7040'; ctx.fillRect(bx+36+i*42,143,16,16); }
+                ctx.fillStyle='#C8A050'; ctx.fillRect(bx+20,133,bw-40,8);
+                if(p>.2){
+                    ctx.strokeStyle='rgba(212,192,144,0.6)'; ctx.lineWidth=.8;
+                    for(let i=0;i<9;i++){
+                        const rx = bx+20+i*46;
+                        ctx.beginPath(); ctx.moveTo(rx,133); ctx.lineTo(340,95); ctx.stroke();
+                    }
+                    ctx.fillStyle='rgba(240,224,160,0.4)';
+                    ctx.beginPath(); ctx.ellipse(340,95,80,10,0,0,Math.PI*2); ctx.fill();
+                    ctx.fillStyle='#8B6914'; ctx.font='10px sans-serif'; ctx.textAlign='center';
+                    ctx.fillText('velarium (awning)',340,100);
+                }
+                if(p>.35){
+                    ctx.strokeStyle='#8B4513'; ctx.lineWidth=2;
+                    ctx.beginPath(); ctx.moveTo(340,133); ctx.lineTo(340,110); ctx.stroke();
+                    ctx.fillStyle='#CC2020'; ctx.fillRect(340,110,28,16);
+                    ctx.fillStyle='white'; ctx.font='bold 8px sans-serif'; ctx.textAlign='center';
+                    ctx.fillText('SPQR',354,121);
+                }
+                const cc=Math.floor(p*14);
+                const cp=[110,130,148,90,72,500,518,540,558,575,88,162,492,582];
+                const cd=[1,1,-1,1,-1,-1,-1,1,-1,1,1,-1,1,-1];
+                const cols2=['#8B4513','#4A2800','#6B3410','#9A5020'];
+                for(let i=0;i<cc&&i<cp.length;i++) worker(cp[i],265,cd[i],'point',cols2[i%cols2.length],SKIN,.8);
+                ctx.fillStyle='rgba(107,80,48,0.22)';
+                ctx.beginPath(); ctx.ellipse(340,273,180,5,0,0,Math.PI*2); ctx.fill();
+                if(p>.7){
+                    const fa = clamp((p-.7)/.3,0,1);
+                    ctx.fillStyle=`rgba(107,48,16,${fa})`;
+                    ctx.font='bold 14px Georgia,serif'; ctx.textAlign='center';
+                    ctx.fillText('Colosseum complete — 80 AD',340,300);
+                    if(p>.85){
+                        const cs2=['#FFD700','#CC2020','#4A90D9','#3A9A40'];
+                        for(let i=0;i<20;i++){
+                            const a=i*(Math.PI*2/20)+globalT*.03;
+                            const r=lerp(0,90,(p-.85)/.15);
+                            const cxd=340+Math.cos(a)*r, cyd=200+Math.sin(a)*r*.4;
+                            if(cyd>90&&cyd<270){ ctx.fillStyle=cs2[i%cs2.length]; ctx.beginPath(); ctx.arc(cxd,cyd,2.5,0,Math.PI*2); ctx.fill(); }
+                        }
+                    }
+                }
+            }
+            ctx.restore();
+        }
+
+        // ── main loop ─────────────────────────────────
+        let lastTS = null;
+        function frame(ts){
+            if(!lastTS) lastTS=ts;
+            lastTS=ts;
+            if(!paused){
+                t++; globalT++;
+                if(t>=STAGE_DUR){ t=0; stageIdx = (stageIdx+1)%TOTAL; }
+            }
+            const lp = t/STAGE_DUR;
+            const prog = (stageIdx + lp)/TOTAL;
+
+            ctx.clearRect(0,0,W,H);
+            drawSky(prog);
+            drawClouds();
+            drawSun(prog);
+            drawTrees();
+
+            if(lp<.12 && stageIdx>0){
+                const fa=lp/.12;
+                renderStage(stageIdx-1,1,1-fa);
+                renderStage(stageIdx,lp,fa);
+            } else {
+                renderStage(stageIdx,lp,1);
+            }
+            drawGround();
+
+            // update HUD
+            document.getElementById('cTitle').textContent = stages[stageIdx].title;
+            document.getElementById('cSub').textContent   = stages[stageIdx].sub;
+            document.getElementById('cBar').style.width   = (prog*100)+'%';
+            dots.forEach((d,i)=>d.classList.toggle('on',i===stageIdx));
+
+            requestAnimationFrame(frame);
+        }
+
+        // ── dots ──────────────────────────────────────
+        const dotWrap = document.getElementById('cDots');
+        const dots = [];
+        for(let i=0;i<TOTAL;i++){
+            const d=document.createElement('div'); d.className='c-dot';
+            d.addEventListener('click',()=>{ stageIdx=i; t=0; });
+            dotWrap.appendChild(d); dots.push(d);
+        }
+
+        // ── buttons ───────────────────────────────────
+        const pbtn = document.getElementById('cPause');
+        pbtn.addEventListener('click',()=>{
+            paused=!paused;
+            pbtn.textContent=paused?'▶ Play':'⏸ Pause';
+        });
+        document.getElementById('cRestart').addEventListener('click',()=>{
+            stageIdx=0; t=0;
+        });
+
+        requestAnimationFrame(frame);
+    })();
+    </script>
+<footer>
+
+    <div class="footer-left">
+
+        <span class="footer-title">
+
+            Nalin Narayan
+
+        </span>
+
+        <span>
+
+            Rome still under construction.
+
+        </span>
+
+    </div>
+
+    <span>
+
+        © 2026
+
+    </span>
+
+</footer>
+</body>
+
+</html>

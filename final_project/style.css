@@ -1,0 +1,947 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lexend:wght@100..900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+@font-face{
+
+    font-family:"Inter";
+
+    src:url("Inter.ttf") format("truetype");
+
+}
+body{
+
+    font-family:"Inter", sans-serif;
+
+    font-optical-sizing:auto;
+
+    margin:0;
+
+    background:#f5f5f7;
+}
+nav{
+
+    display:flex;
+
+    justify-content:center;
+
+    padding-top:30px;
+}
+
+main{
+
+    height:80vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+}
+
+/* PILL */
+
+.nav-pill{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:4px;
+
+    background:#e8e8ed;
+
+    padding:6px;
+
+    border-radius:999px;
+
+    backdrop-filter:blur(20px);
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,0.06);
+}
+
+
+/* LINKS */
+
+.nav-pill a{
+
+    text-decoration:none;
+
+    color:#1d1d1f;
+
+    font-size:15px;
+
+    font-weight:500;
+
+    padding:10px 22px;
+
+    border-radius:999px;
+
+    transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+/* HOVER */
+
+.nav-pill a:hover{
+
+    background:rgba(0,0,0,0.06);
+
+    transform:translateY(-1px);
+}
+
+
+/* ACTIVE TAB */
+
+.nav-pill a.active{
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px rgba(0,0,0,0.08);
+}
+
+.home-button{
+
+    border:none;
+
+    padding:16px 34px;
+
+    border-radius:999px;
+
+    font-size:16px;
+
+    font-weight:500;
+
+    cursor:pointer;
+
+    color:white;
+
+
+    /* MULTICOLOR */
+
+    background:linear-gradient(
+        135deg,
+        #34d399,
+        #60a5fa,
+        #a78bfa,
+        #f472b6
+    );
+
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,0.12);
+
+    transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+
+    
+    display:block;
+
+    margin:40px auto 0 auto;
+}
+
+
+/* HOVER */
+
+.home-button:hover{
+
+    transform:translateY(-3px) scale(1.03);
+
+    opacity:0.92;
+}
+
+
+footer{
+
+    margin-top:300px;
+
+    text-align:center;
+
+    padding-bottom:40px;
+}
+
+
+
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+
+body{
+
+    font-family:"Inter", sans-serif;
+
+    background:#f5f5f2;
+
+    color:#111;
+}
+
+
+/* NAVBAR */
+
+nav{
+
+    display:flex;
+
+    justify-content:center;
+
+    padding-top:25px;
+}
+
+
+.nav-pill{
+
+    display:flex;
+
+    gap:6px;
+
+    background:#ececec;
+
+    padding:6px;
+
+    border-radius:999px;
+}
+
+
+.nav-pill a{
+
+    text-decoration:none;
+
+    color:#111;
+
+    font-size:14px;
+
+    font-weight:500;
+
+    padding:10px 22px;
+
+    border-radius:999px;
+
+    transition:0.25s ease;
+}
+
+
+.nav-pill a:hover{
+
+    background:white;
+}
+
+
+.nav-pill a.active{
+
+    background:white;
+}
+
+
+/* HERO */
+
+.about-hero{
+
+    max-width:1200px;
+
+    margin:auto;
+
+    padding:90px 80px;
+}
+
+
+.about-hero h1{
+
+    font-size:72px;
+
+    font-weight:700;
+
+    margin-bottom:60px;
+
+    letter-spacing:-3px;
+}
+
+
+.about-hero h1 span{
+
+    font-style:italic;
+}
+
+
+/* GRID */
+
+.intro-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:50px;
+
+    align-items:center;
+}
+
+
+/* PHOTO */
+
+.photo-placeholder{
+
+    width:100%;
+
+    height:420px;
+
+    background:#dfeec6;
+
+    border-radius:24px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:24px;
+
+    font-weight:600;
+
+    color:#666;
+}
+
+
+/* INTRO */
+
+.intro-text h2{
+
+    font-size:42px;
+
+    margin-bottom:24px;
+
+    letter-spacing:-2px;
+}
+
+
+.intro-text p{
+
+    color:#666;
+
+    line-height:1.8;
+
+    font-size:17px;
+
+    max-width:500px;
+}
+
+
+/* HOBBIES */
+
+.hobbies-section{
+
+    background:#f8f8f8;
+
+    padding:90px 80px;
+}
+
+
+.hobbies-section h2{
+
+    font-size:48px;
+
+    margin-bottom:20px;
+
+    letter-spacing:-2px;
+}
+
+
+.hobby-description{
+
+    max-width:850px;
+
+    color:#666;
+
+    line-height:1.8;
+
+    margin-bottom:50px;
+}
+
+
+/* HOBBY GRID */
+
+.hobby-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:28px;
+}
+
+
+.hobby-card{
+
+    height:240px;
+
+    border-radius:24px;
+
+    background:#dde8c8;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:22px;
+
+    font-weight:600;
+
+    color:#555;
+}
+
+
+/* EDUCATION */
+
+.education-section{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-end;
+
+    padding:90px 80px;
+
+    border-top:1px solid #ddd;
+}
+
+
+.education-section h2{
+
+    font-size:42px;
+
+    letter-spacing:-2px;
+}
+
+
+.education-section p{
+
+    font-size:28px;
+
+    color:#444;
+}
+
+
+.education-section span{
+
+    color:#777;
+
+    font-size:18px;
+}
+
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+    .intro-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .hobby-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .about-hero{
+
+        padding:60px 30px;
+    }
+
+    .hobbies-section{
+
+        padding:60px 30px;
+    }
+
+    .education-section{
+
+        padding:60px 30px;
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:20px;
+    }
+
+    .about-hero h1{
+
+        font-size:52px;
+    }
+
+}
+/* STRIKE WORD */
+
+.strike-word{
+
+    position:relative;
+
+    display:inline-block;
+
+    color:#888;
+}
+
+
+/* STRIKE LINE */
+
+.strike-line{
+
+    display:block;
+
+    position:absolute;
+
+    left:0;
+
+    top:55%;
+
+    width:0;
+
+    height:3px;
+
+    background:#ff0000ad;
+
+    border-radius:999px;
+
+    
+    /* KEYFRAME */
+
+    animation:strikeDraw 1s ease forwards;
+
+    animation-delay:3s;
+}
+
+
+/* ANIMATION */
+
+@keyframes strikeDraw{
+
+    from{
+
+        width:0;
+    }
+
+    to{
+
+        width:100%;
+    }
+
+}
+
+
+
+/* ROME */
+
+/* PAGE */
+
+.work-body{
+
+    background:#edf4e7;
+
+    font-family:"Inter",sans-serif;
+
+    color:#111;
+
+    overflow-x:hidden;
+}
+
+
+
+/* HERO */
+
+.work-hero{
+
+    width:100%;
+
+    max-width:1200px;
+
+    margin:auto;
+
+    padding:
+
+    70px 24px
+    120px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+}
+
+
+
+/* TITLE */
+
+.work-hero h1{
+
+    font-size:clamp(48px,7vw,110px);
+
+    font-weight:600;
+
+    letter-spacing:-0.07em;
+
+    line-height:0.92;
+
+    text-align:center;
+
+    max-width:900px;
+}
+
+
+/* SUBTITLE */
+
+.hero-subtitle{
+
+    font-size:clamp(18px,2vw,28px);
+
+    color:#5d5d5d;
+
+    margin-bottom:60px;
+
+    font-style:italic;
+
+    text-align:center;
+}
+
+
+
+/* CARD */
+
+.rome-container{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+}
+
+
+.colosseum-canvas-wrap{
+
+    width:min(1100px,95vw);
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    background:#000;
+
+    box-shadow:
+    0 35px 90px rgba(0,0,0,0.14);
+}
+
+
+
+/* NAV */
+
+nav{
+
+    display:flex;
+
+    justify-content:center;
+
+    padding-top:24px;
+}
+
+
+.nav-pill{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    background:#e8ece1;
+
+    padding:6px;
+
+    border-radius:999px;
+}
+
+
+.nav-pill a{
+
+    text-decoration:none;
+
+    color:#111;
+
+    padding:11px 22px;
+
+    border-radius:999px;
+
+    font-size:14px;
+
+    font-weight:500;
+
+    transition:0.25s ease;
+}
+
+
+.nav-pill a:hover{
+
+    background:rgba(255,255,255,0.5);
+}
+
+
+.nav-pill a.active{
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px rgba(0,0,0,0.08);
+}
+
+
+
+/* FOOTER */
+
+footer{
+
+    width:100%;
+
+    margin-top:100px;
+
+    padding:
+
+    50px 24px;
+
+    border-top:
+    1px solid rgba(0,0,0,0.08);
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:20px;
+
+    color:#666;
+
+    font-size:14px;
+}
+
+
+.footer-left{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:4px;
+}
+
+
+.footer-title{
+
+    color:#111;
+
+    font-weight:600;
+}
+
+
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .work-hero{
+
+        padding-top:50px;
+    }
+
+    .work-hero h1{
+
+        font-size:clamp(42px,13vw,72px);
+
+        line-height:0.95;
+    }
+
+    .hero-subtitle{
+
+        margin-bottom:36px;
+    }
+
+    footer{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+    }
+
+}
+
+/* Music Credit */
+
+.music-credit {
+
+    position: fixed;
+
+    bottom: 20px;
+    right: 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 10px 14px;
+
+    background: rgba(28, 10, 10, 0.08);
+
+    backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(255,255,255,0.1);
+
+    border-radius: 999px;
+
+    z-index: 999;
+}
+
+.music-logo {
+
+    width: 22px;
+    height: 22px;
+
+    object-fit: contain;
+
+    display: block;
+
+    flex-shrink: 0;
+}
+
+
+.music-credit p {
+
+    margin: 0;
+
+    font-family: 'Inter', sans-serif;
+
+    font-size: 0.9rem;
+
+    color: rgb(0, 0, 0);
+
+    font-weight: 500;
+
+    letter-spacing: -0.02em;
+}
+
+
+
+/* photo-placeholder lotus-card */
+
+/* PHOTO BOX */
+
+.photo-placeholder.lotus-card{
+
+    width:100%;
+
+    max-width:420px;
+
+    min-height:500px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #edf5e7,
+        #dfeccf
+    );
+
+    border-radius:32px;
+
+    padding:28px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    overflow:hidden;
+
+    position:relative;
+
+    box-shadow:
+    0 20px 50px rgba(0,0,0,0.08);
+}
+
+
+
+/* LOTUS IMAGE */
+
+.lotus-image{
+
+    width:100%;
+
+    max-width:300px;
+
+    height:auto;
+
+    object-fit:cover;
+
+    border-radius:24px;
+
+    display:block;
+
+    box-shadow:
+    0 18px 40px rgba(0,0,0,0.12);
+
+    animation:lotusFloat 5s ease-in-out infinite;
+}
+
+
+
+/* TEXT */
+
+.lotus-text{
+
+    margin-top:24px;
+
+    text-align:center;
+
+    color:#5f5f5f;
+
+    font-size:15px;
+
+    line-height:1.7;
+
+    max-width:260px;
+}
+
+
+
+/* FLOAT */
+
+@keyframes lotusFloat{
+
+    0%{
+
+        transform:translateY(0px);
+    }
+
+    50%{
+
+        transform:translateY(-8px);
+    }
+
+    100%{
+
+        transform:translateY(0px);
+    }
+
+}
