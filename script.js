@@ -1,4 +1,4 @@
-var FONT_URL = 'https://raw.githubusercontent.com/google/fonts/main/ofl/playwritedesas/PlaywriteDESAS%5Bwght%5D.ttf';
+var FONT_URL = 'https://raw.githubusercontent.com/google/fonts/main/ofl/borel/Borel-Regular.ttf';
 var SVG_W       = 720;
 var HELLO_SIZE  = 148;
 var HELLO_Y     = 168;
@@ -78,10 +78,10 @@ opentype.load(FONT_URL, function (err, font) {
   var strikeLine = document.getElementById('strike-line');
 
   /* build glyph paths for the text */
-  var hResult = buildGlyphs(font, 'nalin',   hGroup, 'hg', HELLO_SIZE, HELLO_Y);
+  var hResult = buildGlyphs(font, 'hello',   hGroup, 'hg', HELLO_SIZE, HELLO_Y);
   // initially thought to write webdev but changed to grader
-  var wResult = buildGlyphs(font, 'narayan', wGroup, 'wg', WD_SIZE,    WD_Y);
-
+  var wResult = buildGlyphs(font, 'world!', wGroup, 'wg', WD_SIZE,    WD_Y);
+  
   /* center both rows */
   var hOffset = centerGroup(hGroup, hResult.totalWidth);
   centerGroup(wGroup, wResult.totalWidth);
@@ -152,51 +152,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 });
-
-
 window.addEventListener("DOMContentLoaded", () => {
+  const audio = document.getElementById("bg-music");
+  const btn   = document.getElementById("audio-btn");
 
-    const audio = document.getElementById("bg-music");
+  if (!audio || !btn) return;
 
-    if (!audio) {
-        console.log("Audio element not found");
-        return;
+  const savedTime = localStorage.getItem("audioTime");
+  if (savedTime) audio.currentTime = parseFloat(savedTime);
+
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation(); // prevent bubbling to document
+
+    if (audio.paused) {
+      audio.play().catch(err => console.log(err));
+      btn.textContent = "⏸ Pause Mirrorball Funk";
+    } else {
+      audio.pause();
+      btn.textContent = "▶ Click to Listen Mirrorball Funk";
     }
+  });
 
-    /* Restore saved position */
-
-    const savedTime = localStorage.getItem("audioTime");
-
-    if (savedTime) {
-        audio.currentTime = parseFloat(savedTime);
-    }
-
-    /* User interaction required */
-
-    const startAudio = () => {
-
-        audio.play()
-            .then(() => {
-                console.log("Audio started");
-            })
-            .catch(err => {
-                console.log("Playback failed:", err);
-            });
-
-        document.removeEventListener("click", startAudio);
-    };
-
-    document.addEventListener("click", startAudio);
-
-    /* Save playback state */
-
-    setInterval(() => {
-
-        localStorage.setItem(
-            "audioTime",
-            audio.currentTime
-        );
-
-    }, 1000);
-
+  setInterval(() => {
+    localStorage.setItem("audioTime", audio.currentTime);
+  }, 1000);
 });

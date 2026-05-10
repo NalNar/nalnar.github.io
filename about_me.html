@@ -67,37 +67,124 @@
         <div class="intro-grid">
 
             <!-- IMAGE -->
+<div class="photo-placeholder lotus-card">
 
-            <div class="photo-placeholder lotus-card">
-
-    <img
-        src="images/Lotus1.png"
-
-        srcset="
-            Images/Lotus0.png 500w,
-            Images/Lotus1.png 1000w,
-            Images/Lotus2.png 1600w
-        "
-
-        sizes="(max-width: 768px) 90vw, 420px"
-
-        width="1000"
-        height="1000"
-
-        alt="Lotus flower representing the meaning of Nalin in Sanskrit"
-
-        class="lotus-image"
+    <svg
+        class="lotus-svg"
+        viewBox="0 0 600 600"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Floating lotus"
     >
 
-    <p class="lotus-text">
+        <defs>
 
-        lotus in sanskrit.<br>
-        face reveal postponed indefinitely.
+            <!-- Glow -->
 
-    </p>
+            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+
+                <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+
+            </radialGradient>
+
+            <!-- Lotus Gradient -->
+
+            <linearGradient id="petalGradient" x1="0" y1="0" x2="1" y2="1">
+
+                <stop offset="0%" stop-color="#ffd6ec" />
+
+                <stop offset="100%" stop-color="#ff8ec7" />
+
+            </linearGradient>
+
+        </defs>
+
+        <!-- Glow -->
+
+        <circle
+            class="lotus-glow"
+            cx="300"
+            cy="300"
+            r="180"
+            fill="url(#glow)"
+        />
+
+        <!-- Lotus -->
+
+        <g class="lotus-float">
+
+            <!-- Back Petals -->
+
+            <ellipse
+                class="petal"
+                cx="220"
+                cy="290"
+                rx="45"
+                ry="110"
+                fill="url(#petalGradient)"
+                transform="rotate(-35 220 290)"
+            />
+
+            <ellipse
+                class="petal"
+                cx="380"
+                cy="290"
+                rx="45"
+                ry="110"
+                fill="url(#petalGradient)"
+                transform="rotate(35 380 290)"
+            />
+
+            <!-- Side Petals -->
+
+            <ellipse
+                class="petal"
+                cx="255"
+                cy="300"
+                rx="50"
+                ry="130"
+                fill="url(#petalGradient)"
+                transform="rotate(-18 255 300)"
+            />
+
+            <ellipse
+                class="petal"
+                cx="345"
+                cy="300"
+                rx="50"
+                ry="130"
+                fill="url(#petalGradient)"
+                transform="rotate(18 345 300)"
+            />
+
+            <!-- Center -->
+
+            <ellipse
+                class="petal"
+                cx="300"
+                cy="280"
+                rx="55"
+                ry="150"
+                fill="url(#petalGradient)"
+            />
+
+            <ellipse
+                class="petal"
+                cx="300"
+                cy="330"
+                rx="70"
+                ry="100"
+                fill="#ffc1df"
+                opacity="0.95"
+            />
+
+        </g>
+
+    </svg>
+
 
 </div>
-
 
             <!-- TEXT -->
 
@@ -154,7 +241,162 @@
         <div class="hobby-grid">
 
             <div class="hobby-card">
-                Arrowverse
+                <div class="arrowverse-icons-grid">
+
+    <!-- GREEN ARROW -->
+
+    <div class="hero-icon">
+
+        <svg viewBox="0 0 220 220">
+
+            <circle
+                cx="110"
+                cy="110"
+                r="78"
+                fill="none"
+                stroke="#d8c16c"
+                stroke-width="8"
+            />
+
+            <polygon
+                class="icon-float"
+                points="
+                    110,18
+                    160,175
+                    110,145
+                    60,175
+                "
+                fill="#5ed48b"
+                stroke="#063d1b"
+                stroke-width="6"
+            />
+
+        </svg>
+
+    </div>
+
+
+    <!-- FLASH -->
+
+    <div class="hero-icon">
+
+        <svg viewBox="0 0 220 220">
+
+            <circle
+                cx="110"
+                cy="110"
+                r="82"
+                fill="#c40000"
+                stroke="#d6b04f"
+                stroke-width="10"
+            />
+
+            <polygon
+                class="icon-float"
+                points="
+                    135,30
+                    92,105
+                    125,105
+                    82,190
+                    152,98
+                    118,98
+                "
+                fill="#ffd44d"
+                stroke="#7a4f00"
+                stroke-width="4"
+            />
+
+        </svg>
+
+    </div>
+
+
+    <!-- LEGENDS -->
+
+    <div class="hero-icon">
+
+        <svg viewBox="0 0 220 220">
+
+            <circle
+                cx="110"
+                cy="110"
+                r="80"
+                fill="none"
+                stroke="#9a6428"
+                stroke-width="10"
+            />
+
+            <g class="icon-float">
+
+                <path
+                    d="
+                        M80 55
+                        H140
+                        C135 80 120 90 110 100
+                        C120 110 135 125 140 165
+                        H80
+                        C85 125 100 110 110 100
+                        C100 90 85 80 80 55
+                    "
+                    fill="#dfe7ea"
+                    stroke="#888"
+                    stroke-width="4"
+                />
+
+                <polygon
+                    points="
+                        95,118
+                        125,118
+                        110,145
+                    "
+                    fill="#ff8f66"
+                />
+
+            </g>
+
+        </svg>
+
+    </div>
+
+
+    <!-- SUPERMAN -->
+
+    <div class="hero-icon">
+
+        <svg viewBox="0 0 240 220">
+
+            <path
+                class="icon-float"
+                d="
+                    M40 40
+                    H200
+                    L220 80
+                    L120 180
+                    L20 80
+                    Z
+                "
+                fill="#cf1212"
+                stroke="#6b0000"
+                stroke-width="8"
+            />
+
+            <text
+                x="120"
+                y="130"
+                text-anchor="middle"
+                font-size="100"
+                font-weight="900"
+                font-family="Arial Black"
+                fill="#ffd84d"
+            >
+                S
+            </text>
+
+        </svg>
+
+    </div>
+
+</div>
             </div>
 
             <div class="hobby-card">
