@@ -78,9 +78,9 @@ opentype.load(FONT_URL, function (err, font) {
   var strikeLine = document.getElementById('strike-line');
 
   /* build glyph paths for the text */
-  var hResult = buildGlyphs(font, 'hello',   hGroup, 'hg', HELLO_SIZE, HELLO_Y);
+  var hResult = buildGlyphs(font, 'nalin',   hGroup, 'hg', HELLO_SIZE, HELLO_Y);
   // initially thought to write webdev but changed to grader
-  var wResult = buildGlyphs(font, 'Grader', wGroup, 'wg', WD_SIZE,    WD_Y);
+  var wResult = buildGlyphs(font, 'narayan', wGroup, 'wg', WD_SIZE,    WD_Y);
 
   /* center both rows */
   var hOffset = centerGroup(hGroup, hResult.totalWidth);
