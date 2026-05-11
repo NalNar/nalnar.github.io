@@ -125,7 +125,7 @@ opentype.load(FONT_URL, function (err, font) {
 });
 
 
-
+// Welcome button
 document.addEventListener('DOMContentLoaded', function() {
 
     const button = document.querySelector('.home-button');
@@ -152,6 +152,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 });
+
+// Music Controls
 window.addEventListener("DOMContentLoaded", () => {
   const audio = document.getElementById("bg-music");
   const btn   = document.getElementById("audio-btn");
@@ -161,15 +163,40 @@ window.addEventListener("DOMContentLoaded", () => {
   const savedTime = localStorage.getItem("audioTime");
   if (savedTime) audio.currentTime = parseFloat(savedTime);
 
-  btn.addEventListener("click", (e) => {
-    e.stopPropagation(); // prevent bubbling to document
+  let unlocked = false;
 
+  const unlock = () => {
+    if (unlocked) return;
+    unlocked = true;
+    audio.play().then(() => {
+      btn.textContent = "Created by Suno & Me | ⏸ Pause Mirrorball Funk";
+    });
+  };
+
+  // Try immediately
+  audio.play()
+    .then(() => {
+      unlocked = true;
+      btn.textContent = "Created by Suno & Me | ⏸ Pause Mirrorball Funk";
+    })
+    .catch(() => {
+      btn.textContent = "Created by Suno & Me | ▶ Click to Listen Mirrorball Funk";
+      // Any click anywhere unlocks it
+      document.addEventListener("click", unlock, { once: true });
+    });
+
+  // Button toggles pause/play
+  btn.addEventListener("click", () => {
+    if (!unlocked) {
+      unlock();
+      return;
+    }
     if (audio.paused) {
-      audio.play().catch(err => console.log(err));
-      btn.textContent = "⏸ Pause Mirrorball Funk";
+      audio.play();
+      btn.textContent = "Created by Suno & Me | ⏸ Pause Mirrorball Funk";
     } else {
       audio.pause();
-      btn.textContent = "▶ Click to Listen Mirrorball Funk";
+      btn.textContent = "Created by Suno & Me | ▶ Click to Listen Mirrorball Funk";
     }
   });
 
