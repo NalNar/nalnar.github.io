@@ -171,6 +171,7 @@ nav{
 .story-scroll{
   height:600vh;
   position:relative;
+  
 }
 .story-sticky{
   position:sticky;
@@ -395,6 +396,307 @@ footer{
   letter-spacing:.1em;
   border-top:1px solid rgba(26,24,20,.07);
 }
+/* ════════════════════════════════════════
+   MOBILE / TABLET RESPONSIVE
+════════════════════════════════════════ */
+
+@media (max-width: 1024px){
+
+  .hero{
+    padding:
+      120px 32px 72px;
+  }
+
+  .hero-name{
+    font-size:
+      clamp(64px,14vw,120px);
+  }
+
+  .story-title-block{
+    left:32px;
+    right:32px;
+    bottom:72px;
+  }
+
+  .story-title-block h2{
+    font-size:
+      clamp(42px,10vw,84px);
+  }
+
+  .chapter-indicator{
+    left:32px;
+    top:28px;
+  }
+
+  .hobbies-section{
+    padding:
+      100px 32px;
+  }
+
+  .education-section{
+    padding:
+      72px 32px;
+  }
+
+}
+
+
+/* ───────────────────────────────── */
+
+@media (max-width: 768px){
+
+  body{
+    overflow-x:hidden;
+  }
+
+  nav{
+    padding:14px;
+  }
+
+  .nav-pill{
+    width:100%;
+    justify-content:center;
+    gap:2px;
+    padding:6px;
+  }
+
+  .nav-pill a{
+    flex:1;
+    text-align:center;
+
+    font-size:11px;
+
+    padding:
+      10px 8px;
+  }
+
+  .hero{
+    min-height:100svh;
+
+    padding:
+      120px 24px 64px;
+  }
+
+  .hero-eyebrow{
+    font-size:9px;
+
+    letter-spacing:.28em;
+
+    text-align:center;
+
+    line-height:1.7;
+  }
+
+  .hero-name{
+    font-size:
+      clamp(56px,18vw,96px);
+
+    line-height:.92;
+  }
+
+  .hero-sub{
+    font-size:15px;
+
+    line-height:1.7;
+
+    max-width:320px;
+  }
+
+  .hero-meta{
+    gap:18px;
+
+    flex-direction:column;
+  }
+
+  .hero-divider{
+    width:50px;
+    height:1px;
+  }
+
+  .lotus-float{
+    width:72px;
+    height:72px;
+
+    margin-top:36px;
+  }
+
+  .scroll-cue{
+    bottom:24px;
+
+    font-size:9px;
+  }
+
+  .story-scroll{
+    height:500vh;
+  }
+
+  .chapter-indicator{
+    top:22px;
+    left:20px;
+
+    gap:10px;
+  }
+
+  .chapter-tag{
+    font-size:8px;
+
+    letter-spacing:.22em;
+  }
+
+  .story-title-block{
+    left:20px;
+    right:20px;
+    bottom:48px;
+  }
+
+  .story-title-block h2{
+    font-size:
+      clamp(40px,14vw,72px);
+
+    line-height:.92;
+  }
+
+  .story-title-block p{
+    font-size:13px;
+
+    line-height:1.5;
+
+    margin-top:8px;
+  }
+
+  .hobbies-section{
+    padding:
+      84px 20px;
+  }
+
+  .section-eyebrow{
+    font-size:9px;
+  }
+
+  .section-title{
+    font-size:
+      clamp(32px,12vw,56px);
+
+    margin-bottom:40px;
+  }
+
+  .hobby-grid{
+    grid-template-columns:1fr;
+
+    gap:16px;
+  }
+
+  .hobby-card{
+    padding:
+      28px 24px;
+
+    border-radius:20px;
+  }
+
+  .hobby-card .card-num{
+    font-size:52px;
+
+    top:12px;
+    right:16px;
+  }
+
+  .hobby-card h3{
+    font-size:22px;
+  }
+
+  .hobby-card p{
+    font-size:13px;
+
+    line-height:1.7;
+  }
+
+  .education-section{
+    padding:
+      64px 20px;
+
+    flex-direction:column;
+
+    align-items:flex-start;
+  }
+
+  .education-section h2{
+    font-size:24px;
+  }
+
+  .edu-year{
+    font-size:56px;
+  }
+
+  footer{
+    padding:32px 20px;
+
+    font-size:10px;
+
+    line-height:1.6;
+  }
+
+  #musicToast{
+    width:calc(100% - 40px);
+
+    text-align:center;
+
+    font-size:10px;
+
+    padding:
+      12px 16px;
+  }
+
+}
+
+
+/* ───────────────────────────────── */
+
+@media (max-width: 480px){
+
+  .hero{
+    padding:
+      110px 18px 56px;
+  }
+
+  .hero-name{
+    font-size:
+      clamp(48px,20vw,72px);
+  }
+
+  .hero-sub{
+    font-size:14px;
+  }
+
+  .story-title-block h2{
+    font-size:
+      clamp(34px,16vw,58px);
+  }
+
+  .chapter-indicator{
+    transform:scale(.9);
+
+    transform-origin:left top;
+  }
+
+  .hobby-card{
+    padding:
+      24px 20px;
+  }
+
+  .hobby-card .card-icon{
+    width:48px;
+    height:48px;
+  }
+
+  .hobby-card h3{
+    font-size:20px;
+  }
+
+  .edu-year{
+    font-size:44px;
+  }
+
+}
 </style>
 </head>
 <body>
@@ -414,7 +716,7 @@ footer{
 <section class="hero">
   <div class="hero-eyebrow">New York University · Computer Science · 2027</div>
   <h1 class="hero-name">Nalin<br><em>Narayan</em></h1>
-  <p class="hero-sub">नलिन — Lotus. Pure and peaceful.<br>Enlightenment in challenging situations.</p>
+  <p class="hero-sub">नलिन - Lotus. Pure and peaceful.<br>Enlightenment in challenging situations.</p>
   <div class="hero-meta">
     <div class="hero-meta-item">
       <span class="label">Based in</span>
@@ -614,7 +916,7 @@ window.addEventListener('resize', resize);
 const CHAPTERS = [
   {tag:'Arrowverse', h2:'Arrow',        sub:'Precision and the hunt'},
   {tag:'Arrowverse', h2:'The Flash',    sub:'Speed is everything'},
-  {tag:'Arrowverse', h2:'House Of AL',  sub:'Hope takes flight'},
+  {tag:'Arrowverse', h2:'House of AL',  sub:'Hope takes flight'},
   {tag:'Music',      h2:'Hozier',       sub:'Earthy, raw, soulful'},
   {tag:'Aviation',   h2:'Aircrafts',    sub:'Planes, trains, automobiles'},
 ];
@@ -940,10 +1242,53 @@ function loop() {
   const scrollY    = window.scrollY;
   const maxScroll  = document.body.scrollHeight - window.innerHeight;
   const progress   = clamp(scrollY / maxScroll, 0, 1);
+  /* ═══════════════════
+   CHAPTER TIMINGS
+═══════════════════ */
 
-  const cf = progress * CHAPTERS.length;
-  const ch = clamp(Math.floor(cf), 0, CHAPTERS.length-1);
-  const local = cf - ch;
+const chapterWeights = [
+
+  2,   // Arrow
+  1,   // Flash
+  1,   // Superman
+  1,   // Hozier
+  2.4  // Aircraft ← LONGER
+];
+
+
+/* total duration */
+
+const totalWeight =
+  chapterWeights.reduce(
+    (a,b)=>a+b,
+    0
+  );
+
+/* weighted progress */
+
+let weighted =
+  progress * totalWeight;
+
+let ch = 0;
+
+while(
+  weighted >
+  chapterWeights[ch] &&
+  ch < chapterWeights.length-1
+){
+
+  weighted -=
+    chapterWeights[ch];
+
+  ch++;
+
+}
+
+/* local scene progress */
+
+const local =
+  weighted /
+  chapterWeights[ch];
 
   // ── Chapter change ──
   if (ch !== lastCh) {
@@ -954,15 +1299,27 @@ function loop() {
     dots.forEach((d, i) => { d.className = 'cdot' + (i===ch?' on':''); });
 
     // ── Auto-play when entering music chapter ──
-    if (ch === MUSIC_CHAPTER && userUnlocked && !hozierPlaying) {
-      hozierAudio.play().then(() => {
-        hozierPlaying = true;
-        scrollMusicOn = true;
-        musicCard.classList.add('playing');
-        fadeVolume(0.75);
-        showToast('♪ Now playing — Jackie & Wilson');
-      }).catch(() => {});
+   if (ch === MUSIC_CHAPTER && userUnlocked && !hozierPlaying) {
+
+  // jump to cinematic part
+    if(hozierAudio.readyState >= 2){
+      hozierAudio.currentTime = 30;
     }
+
+    hozierAudio.play().then(() => {
+
+      hozierPlaying = true;
+      scrollMusicOn = true;
+
+      musicCard.classList.add('playing');
+
+      fadeVolume(0.75);
+
+      showToast('♪ Now playing — Jackie & Wilson');
+
+    }).catch(() => {});
+
+  }
 
     // ── Auto-pause when leaving music chapter ──
     if (ch !== MUSIC_CHAPTER && scrollMusicOn && hozierPlaying) {
