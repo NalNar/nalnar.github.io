@@ -1,4 +1,4 @@
-var FONT_URL = 'https://raw.githubusercontent.com/google/fonts/main/ofl/borel/Borel-Regular.ttf';
+var FONT_URL    = 'https://raw.githubusercontent.com/google/fonts/main/ofl/borel/Borel-Regular.ttf';
 var SVG_W       = 720;
 var HELLO_SIZE  = 250;
 var HELLO_Y     = 168;
@@ -6,25 +6,29 @@ var WD_SIZE     = 200;
 var WD_Y        = 195;
 var STROKE_W    = 2;
 
-/* ── helpers ── */
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+
 function after(ms, fn) { setTimeout(fn, ms); }
 
-/* animate a single <path> drawing on */
+/* Animate a single <path> drawing on */
 function animatePath(el, done) {
   var len = el.getTotalLength();
   el.style.strokeDasharray  = len;
   el.style.strokeDashoffset = len;
-  el.style.opacity = '1';
-  el.style.transition = 'none';
+  el.style.opacity          = '1';
+  el.style.transition       = 'none';
   after(20, function () {
     var dur = Math.max(350, len * 1.6);
-    el.style.transition = 'stroke-dashoffset ' + dur + 'ms cubic-bezier(0.4,0,0.2,1)';
-    el.style.strokeDashoffset = '0';
-    after(dur + 80, done || function () {});
+    el.style.transition        = 'stroke-dashoffset ' + dur + 'ms cubic-bezier(0.4,0,0.2,1)';
+    el.style.strokeDashoffset  = '0';
+    after(dur, done || function () {});
   });
 }
 
-/* draw paths one after another */
+/* Draw paths one after another */
 function animateSequence(paths, i, done) {
   if (i >= paths.length) { if (done) done(); return; }
   animatePath(paths[i], function () {
@@ -32,7 +36,7 @@ function animateSequence(paths, i, done) {
   });
 }
 
-/* build SVG path elements from font glyphs, return {paths, totalWidth} */
+/* Build SVG path elements from font glyphs */
 function buildGlyphs(font, text, group, gradId, fontSize, yBaseline) {
   var x     = 0;
   var scale = (1 / font.unitsPerEm) * fontSize;
@@ -62,14 +66,18 @@ function buildGlyphs(font, text, group, gradId, fontSize, yBaseline) {
   return { paths: paths, totalWidth: x };
 }
 
-/* center a <g> horizontally in the SVG */
+/* Center a <g> horizontally in the SVG */
 function centerGroup(group, totalWidth) {
   var offset = (SVG_W - totalWidth) / 2;
   group.setAttribute('transform', 'translate(' + offset + ',0)');
   return offset;
 }
 
-/* ── main ── */
+
+/* ============================================================
+   HELLO SVG ANIMATION
+   ============================================================ */
+
 opentype.load(FONT_URL, function (err, font) {
   if (err) { console.error('Font failed to load:', err); return; }
 
@@ -77,44 +85,42 @@ opentype.load(FONT_URL, function (err, font) {
   var wGroup     = document.getElementById('wd-group');
   var strikeLine = document.getElementById('strike-line');
 
-  /* build glyph paths for the text */
-  var hResult = buildGlyphs(font, 'hello',   hGroup, 'hg', HELLO_SIZE, HELLO_Y);
-  // initially thought to write webdev but changed to grader
+  /* Build glyph paths */
+  var hResult = buildGlyphs(font, 'hello',  hGroup, 'hg', HELLO_SIZE, HELLO_Y);
   var wResult = buildGlyphs(font, 'world!', wGroup, 'wg', WD_SIZE,    WD_Y);
-  
-  /* center both rows */
-  var hOffset = centerGroup(hGroup, hResult.totalWidth);
+
+  /* Center both rows */
+  centerGroup(hGroup, hResult.totalWidth);
   centerGroup(wGroup, wResult.totalWidth);
 
+  /* Animation sequence */
+  after(0, function () {
 
-  /* ── animation sequence ── */
-  after(400, function () {
-
-    /* 1. draw hello letter by letter */
+    /* 1. Draw "hello" letter by letter */
     animateSequence(hResult.paths, 0, function () {
 
-      /* 2. fill hello solid */
+      /* 2. Fill hello solid */
       hResult.paths.forEach(function (p) { p.setAttribute('fill', 'url(#hg)'); });
 
-      after(350, function () {
+      after(150, function () {
 
-        /* 3. draw strikethrough */
-        strikeLine.style.transition = 'stroke-dashoffset 0.55s ease';
+        /* 3. Draw strikethrough */
+        strikeLine.style.transition       = 'stroke-dashoffset 0.55s ease';
         strikeLine.style.strokeDashoffset = '0';
 
-        after(650, function () {
+        after(250, function () {
 
-          /* 4. dim hello */
-          hGroup.style.transition = 'opacity 0.5s ease';
+          /* 4. Dim hello */
+          hGroup.style.transition = 'opacity 0.9s cubic-bezier(0.22,1,0.36,1)';
           hGroup.style.opacity    = '0.18';
 
-          after(450, function () {
+          after(350, function () {
 
-            /* 5. draw Web Dev letter by letter */
+            /* 5. Draw "world!" letter by letter */
             wGroup.style.opacity = '1';
             animateSequence(wResult.paths, 0, function () {
 
-              /* 6. fill Web Dev solid */
+              /* 6. Fill "world!" solid */
               wResult.paths.forEach(function (p) { p.setAttribute('fill', 'url(#wg)'); });
             });
           });
@@ -125,82 +131,94 @@ opentype.load(FONT_URL, function (err, font) {
 });
 
 
-// Welcome button
-document.addEventListener('DOMContentLoaded', function() {
+/* ============================================================
+   WELCOME BUTTON
+   ============================================================ */
 
-    const button = document.querySelector('.home-button');
+document.addEventListener('DOMContentLoaded', function () {
+  var button = document.querySelector('.home-button');
+  if (!button) return;
 
-    if(button){
-
-        button.addEventListener('click', function() {
-
-            // CHANGE TEXT
-
-            button.textContent = 'Welcome!';
-
-
-            // GO TO PAGE AFTER DELAY
-
-            setTimeout(function(){
-
-                window.location.href = 'about_me.html';
-
-            }, 250);
-
-        });
-
-    }
-
+  button.addEventListener('click', function () {
+    button.textContent = 'Welcome!';
+    setTimeout(function () {
+      window.location.href = 'about_me.html';
+    }, 250);
+  });
 });
 
-// Music Controls
-window.addEventListener("DOMContentLoaded", () => {
-  const audio = document.getElementById("bg-music");
-  const btn   = document.getElementById("audio-btn");
 
+/* ============================================================
+   AUDIO — AUTOPLAY ON LOAD WITH CINEMATIC FADE-IN
+   ============================================================ */
+
+window.addEventListener('DOMContentLoaded', function () {
+  var audio = document.getElementById('bg-music');
+  var btn   = document.getElementById('audio-btn');
   if (!audio || !btn) return;
 
-  const savedTime = localStorage.getItem("audioTime");
-  if (savedTime) audio.currentTime = parseFloat(savedTime);
+  /* Restore playback position across page navigations */
+  var savedTime = parseFloat(localStorage.getItem('audioTime') || '0');
+  if (savedTime > 0) audio.currentTime = savedTime;
 
-  let unlocked = false;
+  /* Save position every second */
+  setInterval(function () {
+    if (!audio.paused) localStorage.setItem('audioTime', audio.currentTime);
+  }, 1000);
 
-  const unlock = () => {
-    if (unlocked) return;
-    unlocked = true;
-    audio.play().then(() => {
-      btn.textContent = "Created by Suno & Me | ⏸ Pause Mirrorball Funk";
-    });
-  };
+  /* Labels */
+  var LABEL_PLAY  = 'Created by Suno & Me | ▶ Click to Listen - Mirrorball Funk';
+  var LABEL_PAUSE = 'Created by Suno & Me | ⏸ Pause - Mirrorball Funk';
 
-  // Try immediately
+  /* Smooth volume fade-in from 0 → target */
+  function fadeIn(target, stepMs) {
+    audio.volume = 0;
+    var fade = setInterval(function () {
+      audio.volume = Math.min(audio.volume + 0.03, target);
+      if (audio.volume >= target) clearInterval(fade);
+    }, stepMs || 60);
+  }
+
+  /* ── Attempt silent autoplay on load ── */
+  audio.volume = 0;
   audio.play()
-    .then(() => {
-      unlocked = true;
-      btn.textContent = "Created by Suno & Me | ⏸ Pause Mirrorball Funk";
+    .then(function () {
+      /* Autoplay allowed — fade in smoothly */
+      fadeIn(0.72);
+      btn.textContent = LABEL_PAUSE;
     })
-    .catch(() => {
-      btn.textContent = "Created by Suno & Me | ▶ Click to Listen Mirrorball Funk";
-      // Any click anywhere unlocks it
-      document.addEventListener("click", unlock, { once: true });
+    .catch(function () {
+      /* Autoplay blocked (common on mobile) —
+         wait for any user gesture, then start */
+      btn.textContent = LABEL_PLAY;
+
+      function onFirstGesture() {
+        audio.play().then(function () {
+          fadeIn(0.72);
+          btn.textContent = LABEL_PAUSE;
+        });
+        document.removeEventListener('click',      onFirstGesture);
+        document.removeEventListener('touchstart', onFirstGesture);
+        document.removeEventListener('keydown',    onFirstGesture);
+      }
+
+      document.addEventListener('click',      onFirstGesture, { once: true });
+      document.addEventListener('touchstart', onFirstGesture, { once: true });
+      document.addEventListener('keydown',    onFirstGesture, { once: true });
     });
 
-  // Button toggles pause/play
-  btn.addEventListener("click", () => {
-    if (!unlocked) {
-      unlock();
-      return;
-    }
+  /* ── Button toggles pause / play ── */
+  btn.addEventListener('click', function (e) {
+    /* Stop this click from also firing the 'onFirstGesture' listener */
+    e.stopPropagation();
+
     if (audio.paused) {
-      audio.play();
-      btn.textContent = "Created by Suno & Me | ⏸ Pause Mirrorball Funk";
+      audio.play().then(function () {
+        btn.textContent = LABEL_PAUSE;
+      });
     } else {
       audio.pause();
-      btn.textContent = "Created by Suno & Me | ▶ Click to Listen Mirrorball Funk";
+      btn.textContent = LABEL_PLAY;
     }
   });
-
-  setInterval(() => {
-    localStorage.setItem("audioTime", audio.currentTime);
-  }, 1000);
 });
