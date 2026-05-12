@@ -838,14 +838,73 @@ footer{
 // ════════════════════════════════════════
 // AUDIO — single declaration, no duplicates
 // ════════════════════════════════════════
-const hozierAudio = new Audio('Audio/HozierJackieAndWilson.mp3');
-hozierAudio.preload = 'auto';
-hozierAudio.loop    = true;
-hozierAudio.volume  = 0;          // start silent; fades in when chapter hits
+// ════════════════════════════════════════
+// HOZIER PLAYLIST
+// ════════════════════════════════════════
 
-let hozierPlaying   = false;      // manual card toggle state
-let scrollMusicOn   = false;      // whether scroll auto-started it
-let userUnlocked    = false;      // browser requires a user gesture before play()
+const HOZIER_TRACKS = [
+
+  {
+    title:'Jackie And Wilson',
+    file:'Audio/HozierJackieAndWilson.mp3',
+    start:30
+  },
+
+  {
+    title:'Too Sweet',
+    file:'Audio/TooSweet.mp3',
+    start:45
+  },
+
+  {
+    title:'Nobodys Soldier',
+    file:'Audio/NbS.mp3',
+    start:60
+  },
+
+  {
+    title:'Take Me To Church',
+    file:'Audio/TMTC.mp3',
+    start:25
+  }
+
+];
+
+
+/* ──────────────────
+   RANDOM TRACK
+────────────────── */
+
+const currentTrack =
+  HOZIER_TRACKS[
+    Math.floor(
+      Math.random() *
+      HOZIER_TRACKS.length
+    )
+  ];
+
+
+/* ──────────────────
+   AUDIO OBJECT
+────────────────── */
+
+const hozierAudio =
+  new Audio(currentTrack.file);
+
+hozierAudio.preload = 'auto';
+
+hozierAudio.loop = true;
+
+hozierAudio.volume = 0;
+
+
+/* ──────────────────
+   STATES
+────────────────── */
+
+let hozierPlaying = false;
+let scrollMusicOn = false;
+let userUnlocked = false;
 
 // Volume fade helpers
 let fadeTo = 0, fadeRaf = null;
@@ -879,7 +938,7 @@ musicCard.addEventListener('click', async () => {
       fadeVolume(0);
       setTimeout(() => {
         hozierAudio.pause();
-        hozierAudio.currentTime = 0;
+        hozierAudio.currentTime = currentTrack.start;
       }, 400);
       hozierPlaying = false;
       scrollMusicOn = false;
@@ -1322,7 +1381,7 @@ const local =
 
       fadeVolume(0.75);
 
-      showToast('♪ Now playing — Jackie & Wilson');
+      showToast(`♪ Now playing — ${currentTrack.title}`);
 
     }).catch(() => {});
 
