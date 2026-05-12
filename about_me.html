@@ -1,453 +1,1015 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Nalin Narayan</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+:root{
+  --cream:#f5f0e8;
+  --warm-white:#faf8f4;
+  --stone:#e8e0d0;
+  --ink:#1a1814;
+  --dim:#8a8278;
+  --gold:#c9a84c;
+  --arch-stone:#d4cfc6;
+}
+#storyH2{
+  color: rgb(242, 255, 243);
+  opacity: 0.5;
+}
+body{
+  background:var(--warm-white);
+  color:var(--ink);
+  font-family:'Inter',sans-serif;
+  overflow-x:hidden;
+}
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:100;
+  display:flex;
+  justify-content:center;
+  padding:20px;
+}
+.nav-pill{
+  display:flex;
+  gap:4px;
+  background:rgba(245,240,232,0.85);
+  backdrop-filter:blur(16px);
+  border:1px solid rgba(26,24,20,.1);
+  border-radius:999px;
+  padding:6px 8px;
+}
+.nav-pill a{
+  text-decoration:none;
+  font-size:13px;
+  font-weight:500;
+  color:var(--dim);
+  padding:7px 18px;
+  border-radius:999px;
+  transition:all .2s;
+  letter-spacing:.03em;
+}
+.nav-pill a:hover,.nav-pill a.active{
+  background:var(--ink);
+  color:var(--cream);
+}
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:120px 48px 80px;
+  background:var(--warm-white);
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(201,168,76,.08) 0%, transparent 70%),
+    radial-gradient(ellipse 80% 60% at 80% 100%, rgba(201,168,76,.04) 0%, transparent 60%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  font-size:11px;
+  letter-spacing:.4em;
+  color:var(--dim);
+  text-transform:uppercase;
+  margin-bottom:28px;
+}
+.hero-name{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(72px,12vw,160px);
+  font-weight:900;
+  line-height:.9;
+  letter-spacing:-.03em;
+  text-align:center;
+  color:var(--ink);
+}
+.hero-name em{
+  font-style:italic;
+  font-weight:400;
+  color:var(--gold);
+}
+.hero-sub{
+  font-family:'Inter',sans-serif;
+  font-style:italic;
+  font-size:clamp(16px,2vw,24px);
+  color:var(--dim);
+  margin-top:22px;
+  text-align:center;
+}
+.hero-meta{
+  display:flex;
+  gap:40px;
+  margin-top:48px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.hero-meta-item{ text-align:center; }
+.hero-meta-item .label{
+  font-size:10px;
+  letter-spacing:.35em;
+  text-transform:uppercase;
+  color:var(--dim);
+  display:block;
+  margin-bottom:4px;
+}
+.hero-meta-item .value{
+  font-size:15px;
+  font-weight:500;
+  color:var(--ink);
+}
+.hero-divider{
+  width:1px;
+  height:40px;
+  background:rgba(26,24,20,.12);
+  align-self:center;
+}
+.lotus-float{
+  margin:44px auto 0;
+  width:90px;
+  height:90px;
+  animation:floatLotus 4s ease-in-out infinite;
+}
+@keyframes floatLotus{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+}
+.scroll-cue{
+  position:absolute;
+  bottom:36px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  color:rgba(26,24,20,.25);
+  font-size:10px;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+}
+.scroll-cue-line{
+  width:1px;
+  height:40px;
+  background:rgba(26,24,20,.15);
+  animation:scrollPulse 2s ease-in-out infinite;
+  transform-origin:top;
+}
+@keyframes scrollPulse{0%,100%{transform:scaleY(0);opacity:0}50%{transform:scaleY(1);opacity:1}}
 
-    <meta charset="UTF-8">
+/* ── STORY SCROLL ── */
+.story-scroll{
+  height:600vh;
+  position:relative;
+}
+.story-sticky{
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow:hidden;
+}
+#storyCanvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+}
+.story-hud{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:10;
+}
+.chapter-indicator{
+  position:absolute;
+  top:36px;
+  left:48px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+.chapter-dot-row{ display:flex; gap:6px; }
+.cdot{
+  width:5px;height:5px;
+  border-radius:50%;
+  background:rgba(255,255,255,.25);
+  transition:all .3s;
+}
+.cdot.on{
+  background:#fff;
+  transform:scale(1.3);
+}
+.chapter-tag{
+  font-size:10px;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.35);
+}
+.story-title-block{
+  position:absolute;
+  bottom:80px;
+  left:48px;
+  right:48px;
+}
+.story-title-block h2{
+  font-family:'Inter',sans-serif;
+  font-size:clamp(48px,8vw,110px);
+  font-weight:900;
+  line-height:.92;
+  color:#fff;
+  opacity:.5;
+  transition:opacity .3s;
+}
+.story-title-block p{
+  font-family:'Inter',sans-serif;
+  font-style:italic;
+  font-size:clamp(14px,1.6vw,20px);
+  color:rgba(255,255,255,.35);
+  margin-top:10px;
+}
+.progress-line{
+  position:absolute;
+  bottom:0;left:0;
+  height:3px;
+  width:0%;
+  background:linear-gradient(90deg,var(--gold),#e8b84b,var(--gold));
+  transition:width .08s;
+}
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+/* ── music-scroll toast ── */
+#musicToast{
+  position:fixed;
+  bottom:32px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:rgba(26,24,20,.85);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(201,168,76,.3);
+  color:rgba(255,255,255,.8);
+  font-size:12px;
+  letter-spacing:.15em;
+  padding:10px 22px;
+  border-radius:999px;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .4s, transform .4s;
+  z-index:200;
+}
+#musicToast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
 
-    <title>About Me - Nalin Narayan</title>
+/* ── HOBBIES SECTION ── */
+.hobbies-section{
+  background:var(--warm-white);
+  padding:120px 48px;
+}
+.section-eyebrow{
+  font-size:10px;
+  letter-spacing:.4em;
+  text-transform:uppercase;
+  color:var(--dim);
+  margin-bottom:16px;
+}
+.section-title{
+  font-family:"Inter",sans-serif;
+  font-size:clamp(36px,5vw,64px);
+  font-weight:700;
+  line-height:1;
+  color:var(--ink);
+  margin-bottom:60px;
+}
+.hobby-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:20px;
+  width:100%;
+  max-width:1400px;
+  margin:0 auto;
+}
+@media(max-width:768px){.hobby-grid{grid-template-columns:1fr}}
+.hobby-card{
+  font-family:"Inter",sans-serif;
+  border:1px solid rgba(26,24,20,.1);
+  border-radius:16px;
+  padding:40px 32px;
+  background:var(--cream);
+  position:relative;
+  overflow:hidden;
+  transition:transform .25s,box-shadow .25s;
+  width:100%;
+  min-width:0;
+}
+.hobby-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 20px 60px rgba(26,24,20,.08);
+}
+.music-card{
+  cursor:pointer;
+  transition:transform .3s, box-shadow .3s, border-color .3s;
+}
+.music-card::after{
+  content:'PLAY';
+  position:absolute;
+  top:22px; right:24px;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.25em;
+  color:rgba(201,168,76,.7);
+  opacity:0;
+  transition:opacity .3s;
+}
+.music-card:hover::after{ opacity:1; }
+.music-card.playing{
+  border-color:rgba(201,168,76,.5);
+  box-shadow: 0 0 40px rgba(201,168,76,.12), 0 20px 60px rgba(26,24,20,.08);
+}
+.music-card.playing::after{ content:'PAUSE'; opacity:1; }
+.hobby-card .card-num{
+  font-family:"Inter",sans-serif;
+  font-size:72px;
+  color:rgba(26,24,20,.04);
+  line-height:1;
+  position:absolute;
+  top:16px;right:20px;
+}
+.hobby-card .card-icon{
+  width:56px;height:56px;
+  margin-bottom:24px;
+  display:flex;align-items:center;justify-content:center;
+}
+.hobby-card h3{
+  font-family:"Inter",sans-serif;
+  font-size:24px;
+  font-weight:700;
+  margin-bottom:10px;
+  color:var(--ink);
+}
+.hobby-card p{
+  font-size:14px;
+  line-height:1.7;
+  color:var(--dim);
+}
 
-    <!-- INTER FONT -->
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
-
-    <link rel="stylesheet" href="style.css">
-
+/* ── EDUCATION ── */
+.education-section{
+  border-top:1px solid rgba(26,24,20,.08);
+  padding:80px 48px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  max-width:1100px;
+  margin:0 auto;
+  flex-wrap:wrap;
+  gap:20px;
+}
+.education-section h2{
+  font-family:"Inter",sans-serif;
+  font-size:28px;
+  font-weight:700;
+  color:var(--ink);
+}
+.education-section p{ color:var(--dim); margin-top:6px; }
+.edu-year{
+  font-family:"Inter",sans-serif;
+  font-size:72px;
+  color:rgba(26,24,20,.06);
+  line-height:1;
+}
+footer{
+  text-align:center;
+  padding:40px;
+  font-size:12px;
+  color:var(--dim);
+  letter-spacing:.1em;
+  border-top:1px solid rgba(26,24,20,.07);
+}
+</style>
 </head>
-
-
-
 <body>
 
-
-    <!-- NAVBAR -->
-
-    <nav>
-
-        <div class="nav-pill">
-
-            <a href="index.html">
-                Home
-            </a>
-
-            <a href="work.html">
-                Work
-            </a>
-
-            <a href="about_me.html" class="active">
-                About
-            </a>
-            
-        </div>
-
-    </nav>
-
-
-
-    <!-- HERO -->
-
-    <section class="about-hero">
-
-        <h1>
-
-            name is
-            <span>Nalin N</span>
-
-        </h1>
-
-
-        <div class="intro-grid">
-
-            <!-- IMAGE -->
-<div class="photo-placeholder lotus-card">
-
-    <svg
-        class="lotus-svg"
-        viewBox="0 0 600 600"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-label="Floating lotus"
-    >
-
-        <defs>
-
-            <!-- Glow -->
-
-            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-
-                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
-
-                <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
-
-            </radialGradient>
-
-            <!-- Lotus Gradient -->
-
-            <linearGradient id="petalGradient" x1="0" y1="0" x2="1" y2="1">
-
-                <stop offset="0%" stop-color="#ffd6ec" />
-
-                <stop offset="100%" stop-color="#ff8ec7" />
-
-            </linearGradient>
-
-        </defs>
-
-        <!-- Glow -->
-
-        <circle
-            class="lotus-glow"
-            cx="300"
-            cy="300"
-            r="180"
-            fill="url(#glow)"
-        />
-
-        <!-- Lotus -->
-
-        <g class="lotus-float">
-
-            <!-- Back Petals -->
-
-            <ellipse
-                class="petal"
-                cx="220"
-                cy="290"
-                rx="45"
-                ry="110"
-                fill="url(#petalGradient)"
-                transform="rotate(-35 220 290)"
-            />
-
-            <ellipse
-                class="petal"
-                cx="380"
-                cy="290"
-                rx="45"
-                ry="110"
-                fill="url(#petalGradient)"
-                transform="rotate(35 380 290)"
-            />
-
-            <!-- Side Petals -->
-
-            <ellipse
-                class="petal"
-                cx="255"
-                cy="300"
-                rx="50"
-                ry="130"
-                fill="url(#petalGradient)"
-                transform="rotate(-18 255 300)"
-            />
-
-            <ellipse
-                class="petal"
-                cx="345"
-                cy="300"
-                rx="50"
-                ry="130"
-                fill="url(#petalGradient)"
-                transform="rotate(18 345 300)"
-            />
-
-            <!-- Center -->
-
-            <ellipse
-                class="petal"
-                cx="300"
-                cy="280"
-                rx="55"
-                ry="150"
-                fill="url(#petalGradient)"
-            />
-
-            <ellipse
-                class="petal"
-                cx="300"
-                cy="330"
-                rx="70"
-                ry="100"
-                fill="#ffc1df"
-                opacity="0.95"
-            />
-
-        </g>
-
-    </svg>
-
-
-</div>
-
-            <!-- TEXT -->
-
-            <div class="intro-text">
-
-                <h2>
-                    Introduction
-                </h2>
-
-                <p>
-
-                    A little paragraph about me, the meaning of the name comes
-                    from lotus in Sanskrit, meaning pure and peaceful, it also represents enlightenment in challenging situations. Very suited for a computer science major.
-                    I am a computer science major at New York University,
-                    and I am <span class="strike-word">
-                        passionate
-                        <span class="strike-line"></span>
-                        </span>
-                    about computer science. If someone is passionate, they do not need to write about it.
-                    it will show in their work and projects. 
-
-                </p>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- HOBBIES -->
-
-    <section class="hobbies-section">
-
-        <h2>
-            What I Like!
-        </h2>
-
-        <p class="hobby-description">
-
-            A little section to round out the professional purpose of this
-            webpage. This is where I <span class="strike-word">
-                        have
-                        <span class="strike-line"></span>
-                        </span> will put my hobbies.
-
-        </p>
-        
-
-
-        <!-- CARDS -->
-
-        <div class="hobby-grid">
-
-            <div class="hobby-card">
-                <div class="arrowverse-icons-grid">
-
-    <!-- GREEN ARROW -->
-
-    <div class="hero-icon">
-
-        <svg viewBox="0 0 220 220">
-
-            <circle
-                cx="110"
-                cy="110"
-                r="78"
-                fill="none"
-                stroke="#d8c16c"
-                stroke-width="8"
-            />
-
-            <polygon
-                class="icon-float"
-                points="
-                    110,18
-                    160,175
-                    110,145
-                    60,175
-                "
-                fill="#5ed48b"
-                stroke="#063d1b"
-                stroke-width="6"
-            />
-
+<!-- toast shown when music auto-plays during scroll -->
+<div id="musicToast">♪ Now playing — Hozier</div>
+
+<nav>
+  <div class="nav-pill">
+    <a href="index.html">Home</a>
+    <a href="work.html">Work</a>
+    <a href="about_me.html" class="active">About</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">New York University · Computer Science · 2027</div>
+  <h1 class="hero-name">Nalin<br><em>Narayan</em></h1>
+  <p class="hero-sub">नलिन — Lotus. Pure and peaceful.<br>Enlightenment in challenging situations.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="label">Based in</span>
+      <span class="value">New York City</span>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-meta-item">
+      <span class="label">Major</span>
+      <span class="value">Computer Science</span>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-meta-item">
+      <span class="label">Graduating</span>
+      <span class="value">2027</span>
+    </div>
+  </div>
+  <svg class="lotus-float" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="pg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#ffd6ec"/>
+        <stop offset="100%" stop-color="#c9a84c"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="37" cy="52" rx="10" ry="26" fill="url(#pg)" opacity=".7" transform="rotate(-30 37 52)"/>
+    <ellipse cx="63" cy="52" rx="10" ry="26" fill="url(#pg)" opacity=".7" transform="rotate(30 63 52)"/>
+    <ellipse cx="45" cy="50" rx="11" ry="30" fill="url(#pg)" opacity=".85" transform="rotate(-12 45 50)"/>
+    <ellipse cx="55" cy="50" rx="11" ry="30" fill="url(#pg)" opacity=".85" transform="rotate(12 55 50)"/>
+    <ellipse cx="50" cy="46" rx="12" ry="34" fill="url(#pg)"/>
+    <ellipse cx="50" cy="58" rx="16" ry="22" fill="#ffc1df" opacity=".7"/>
+  </svg>
+  <div class="scroll-cue">
+    <div class="scroll-cue-line"></div>
+    scroll
+  </div>
+</section>
+
+<!-- CINEMATIC STORY SCROLL -->
+<section class="story-scroll">
+  <div class="story-sticky">
+    <canvas id="storyCanvas"></canvas>
+    <div class="story-hud">
+      <div class="chapter-indicator">
+        <div class="chapter-dot-row" id="dotRow"></div>
+        <span class="chapter-tag" id="chapterTag">Arrowverse</span>
+      </div>
+      <div class="story-title-block">
+        <h2 id="storyH2">Arrow</h2>
+        <p id="storySub">Precision and the hunt</p>
+      </div>
+      <div class="progress-line" id="pline"></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOBBIES -->
+<section class="hobbies-section">
+  <p class="section-eyebrow">What I like</p>
+  <h2 class="section-title">Some* Interests &amp;<br>Hobbies</h2>
+  <div class="hobby-grid">
+    <div class="hobby-card arrowverse-card">
+      <span class="card-num">01</span>
+      <div class="card-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40">
+          <polygon points="20,4 36,34 20,27 4,34" fill="#2d5a27" stroke="#1a3a14" stroke-width="1.5"/>
         </svg>
-
+      </div>
+      <h3>Arrowverse</h3>
+      <p>Arrow, The Flash, Supergirl, Legends of Tomorrow — the whole CW multiverse. Oliver Queen's discipline, Barry's optimism.</p>
     </div>
 
-
-    <!-- FLASH -->
-
-    <div class="hero-icon">
-
-        <svg viewBox="0 0 220 220">
-
-            <circle
-                cx="110"
-                cy="110"
-                r="82"
-                fill="#c40000"
-                stroke="#d6b04f"
-                stroke-width="10"
-            />
-
-            <polygon
-                class="icon-float"
-                points="
-                    135,30
-                    92,105
-                    125,105
-                    82,190
-                    152,98
-                    118,98
-                "
-                fill="#ffd44d"
-                stroke="#7a4f00"
-                stroke-width="4"
-            />
-
+    <div class="hobby-card music-card" id="musicCard">
+      <span class="card-num">02</span>
+      <div class="card-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40">
+          <circle cx="12" cy="30" r="5" fill="#c9a84c"/>
+          <circle cx="28" cy="26" r="5" fill="#c9a84c"/>
+          <rect x="16" y="7" width="3" height="23" fill="#c9a84c"/>
+          <rect x="31" y="4" width="3" height="22" fill="#c9a84c"/>
+          <path d="M16 7 L34 4" stroke="#c9a84c" stroke-width="2.5" fill="none"/>
         </svg>
-
+      </div>
+      <h3>Music</h3>
+      <p>Hozier fan. The kind of music that sounds like it was recorded in a candlelit room with exposed brick walls.</p>
     </div>
 
-
-    <!-- LEGENDS -->
-
-    <div class="hero-icon">
-
-        <svg viewBox="0 0 220 220">
-
-            <circle
-                cx="110"
-                cy="110"
-                r="80"
-                fill="none"
-                stroke="#9a6428"
-                stroke-width="10"
-            />
-
-            <g class="icon-float">
-
-                <path
-                    d="
-                        M80 55
-                        H140
-                        C135 80 120 90 110 100
-                        C120 110 135 125 140 165
-                        H80
-                        C85 125 100 110 110 100
-                        C100 90 85 80 80 55
-                    "
-                    fill="#dfe7ea"
-                    stroke="#888"
-                    stroke-width="4"
-                />
-
-                <polygon
-                    points="
-                        95,118
-                        125,118
-                        110,145
-                    "
-                    fill="#ff8f66"
-                />
-
-            </g>
-
+    <div class="hobby-card">
+      <span class="card-num">03</span>
+      <div class="card-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1814 1174">
+          <path d="M 35 622 L 248 731 L 249 733 L 224 758 L 217 769 L 216 780 L 223 788 L 243 794 L 275 797 L 368 798 L 461 854 L 476 861 L 517 845 L 517 839 L 490 794 L 492 791 L 586 782 L 659 768 L 740 746 L 843 712 L 922 712 L 949 708 L 1008 693 L 1084 720 L 1086 723 L 1073 743 L 1074 747 L 1078 749 L 1097 743 L 1118 732 L 1123 735 L 1118 743 L 1120 747 L 1140 740 L 1145 741 L 1179 771 L 1166 790 L 1166 794 L 1169 797 L 1200 788 L 1247 826 L 1239 844 L 1239 852 L 1242 855 L 1253 854 L 1269 848 L 1275 848 L 1279 852 L 1283 852 L 1304 841 L 1356 884 L 1365 903 L 1364 916 L 1368 917 L 1386 896 L 1425 870 L 1429 865 L 1372 764 L 1437 738 L 1468 720 L 1480 707 L 1486 695 L 1488 687 L 1486 657 L 1481 644 L 1470 629 L 1458 620 L 1441 614 L 1397 616 L 1316 638 L 1282 582 L 1332 540 L 1433 504 L 1580 446 L 1634 422 L 1705 385 L 1735 365 L 1766 336 L 1781 310 L 1783 286 L 1774 271 L 1759 260 L 1729 248 L 1692 238 L 1663 224 L 1617 213 L 1570 213 L 1500 226 L 1403 256 L 1265 308 L 1083 383 L 1077 382 L 1069 372 L 1052 361 L 1039 358 L 1021 358 L 972 368 L 913 388 L 899 389 L 266 162 L 256 160 L 158 158 L 156 163 L 165 173 L 161 196 L 163 200 L 180 186 L 186 186 L 353 277 L 356 281 L 346 290 L 345 294 L 397 323 L 398 334 L 390 347 L 393 354 L 406 352 L 431 341 L 443 344 L 582 415 L 584 419 L 570 439 L 573 446 L 580 446 L 610 432 L 617 432 L 677 462 L 696 474 L 714 491 L 712 494 L 713 501 L 731 504 L 736 508 L 736 512 L 730 517 L 507 603 L 499 603 L 485 595 L 353 436 L 346 436 L 284 461 L 280 467 L 307 664 L 306 674 L 202 643 L 95 607 L 73 606 L 59 608 L 37 617 Z" fill="slategrey"/>
         </svg>
-
+      </div>
+      <h3>Planes, Trains &amp;<br>Automobiles</h3>
+      <p>Anything that moves fascinates me — the engineering, the systems, the romance of transit infrastructure.</p>
     </div>
+  </div>
+</section>
 
-
-    <!-- SUPERMAN -->
-
-    <div class="hero-icon">
-
-        <svg viewBox="0 0 240 220">
-
-            <path
-                class="icon-float"
-                d="
-                    M40 40
-                    H200
-                    L220 80
-                    L120 180
-                    L20 80
-                    Z
-                "
-                fill="#cf1212"
-                stroke="#6b0000"
-                stroke-width="8"
-            />
-
-            <text
-                x="120"
-                y="130"
-                text-anchor="middle"
-                font-size="100"
-                font-weight="900"
-                font-family="Arial Black"
-                fill="#ffd84d"
-            >
-                S
-            </text>
-
-        </svg>
-
+<section style="background:var(--cream); padding:1px 0;">
+  <div class="education-section">
+    <div>
+      <h2>New York University</h2>
+      <p>B.A. Computer Science</p>
     </div>
+    <span class="edu-year">2027</span>
+  </div>
+</section>
 
-</div>
-            </div>
+<footer>© 2026 Nalin Narayan</footer>
 
-            <div class="hobby-card">
-                Music
-            </div>
+<script>
+// ════════════════════════════════════════
+// AUDIO — single declaration, no duplicates
+// ════════════════════════════════════════
+const hozierAudio = new Audio('Audio/HozierJackieAndWilson.mp3');
+hozierAudio.preload = 'auto';
+hozierAudio.loop    = true;
+hozierAudio.volume  = 0;          // start silent; fades in when chapter hits
 
-            <div class="hobby-card">
-                Planes, Trains, and Automobiles
-            </div>
+let hozierPlaying   = false;      // manual card toggle state
+let scrollMusicOn   = false;      // whether scroll auto-started it
+let userUnlocked    = false;      // browser requires a user gesture before play()
 
-        </div>
+// Volume fade helpers
+let fadeTo = 0, fadeRaf = null;
+function fadeVolume(target, duration = 800) {
+  fadeTo = target;
+  const start     = hozierAudio.volume;
+  const startTime = performance.now();
+  cancelAnimationFrame(fadeRaf);
+  function step(now) {
+    const p = Math.min((now - startTime) / duration, 1);
+    hozierAudio.volume = start + (fadeTo - start) * p;
+    if (p < 1) fadeRaf = requestAnimationFrame(step);
+  }
+  fadeRaf = requestAnimationFrame(step);
+}
 
-    </section>
+// ── Music card: manual play / pause ──
+const musicCard = document.getElementById('musicCard');
+const toast     = document.getElementById('musicToast');
 
-<!-- New Section for Future ! what I dont like -->
+musicCard.addEventListener('click', async () => {
+  userUnlocked = true;           // gesture recorded
+  try {
+    if (!hozierPlaying) {
+      await hozierAudio.play();
+      hozierPlaying = true;
+      scrollMusicOn = true;
+      musicCard.classList.add('playing');
+      fadeVolume(0.8);
+    } else {
+      fadeVolume(0);
+      setTimeout(() => {
+        hozierAudio.pause();
+        hozierAudio.currentTime = 0;
+      }, 400);
+      hozierPlaying = false;
+      scrollMusicOn = false;
+      musicCard.classList.remove('playing');
+    }
+  } catch(err) {
+    console.warn('Audio error:', err);
+  }
+});
 
+// Toast helper
+let toastTimer = null;
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+}
 
+// ════════════════════════════════════════
+// IMAGES
+// ════════════════════════════════════════
+const IMG_ARROW     = new Image(); IMG_ARROW.src     = 'Images/arw.png';
+const IMG_FLASH     = new Image(); IMG_FLASH.src     = 'Images/flash.png';
+const IMG_SUPERGIRL = new Image(); IMG_SUPERGIRL.src = 'Images/al.png';
+const IMG_PLANE     = new Image(); IMG_PLANE.src     = 'Images/airbus.png';
 
-    <!-- EDUCATION -->
+// ════════════════════════════════════════
+// CANVAS SETUP
+// ════════════════════════════════════════
+const canvas = document.getElementById('storyCanvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
 
-    <section class="education-section">
+// ════════════════════════════════════════
+// CHAPTERS
+// ════════════════════════════════════════
+const CHAPTERS = [
+  {tag:'Arrowverse', h2:'Arrow',        sub:'Precision and the hunt'},
+  {tag:'Arrowverse', h2:'The Flash',    sub:'Speed is everything'},
+  {tag:'Arrowverse', h2:'House Of AL',  sub:'Hope takes flight'},
+  {tag:'Music',      h2:'Hozier',       sub:'Earthy, raw, soulful'},
+  {tag:'Aviation',   h2:'Aircrafts',    sub:'Planes, trains, automobiles'},
+];
 
-        <div>
+const MUSIC_CHAPTER = 3;   // index of the Hozier chapter
 
-            <h2>
-                College: New York University
-            </h2>
+const dotRow = document.getElementById('dotRow');
+const dots   = [];
+CHAPTERS.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'cdot' + (i === 0 ? ' on' : '');
+  dotRow.appendChild(d);
+  dots.push(d);
+});
 
-            <p>
-                Computer Science Major
-            </p>
+// ════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════
+const lerp    = (a, b, t) => a + (b - a) * t;
+const clamp   = (v, a, b) => Math.max(a, Math.min(v, b));
+const easeOut = t => 1 - Math.pow(1 - t, 3);
+const easeIn  = t => t * t * t;
 
-        </div>
+function lerpHex(c1, c2, t) {
+  const h = v => parseInt(v, 16);
+  const r = Math.round(lerp(h(c1.slice(1,3)), h(c2.slice(1,3)), t));
+  const g = Math.round(lerp(h(c1.slice(3,5)), h(c2.slice(3,5)), t));
+  const b = Math.round(lerp(h(c1.slice(5,7)), h(c2.slice(5,7)), t));
+  return `rgb(${r},${g},${b})`;
+}
+function drawGlow(x, y, r, col, a) {
+  const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+  g.addColorStop(0, col); g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.fill(); ctx.restore();
+}
 
-        <span>
-            2027
-        </span>
+const stars = Array.from({length:120}, () => ({
+  x: Math.random(), y: Math.random(),
+  r: Math.random()*1.2+.3, sp: Math.random()*.2+.05
+}));
+let gt = 0;
 
-    </section>
+function drawDust(skyDark) {
+  ctx.save();
+  for (const s of stars) {
+    s.y -= s.sp * .0002; if (s.y < 0) s.y = 1;
+    const col = skyDark ? 'rgba(255,255,255,0.5)' : 'rgba(26,24,20,0.12)';
+    ctx.globalAlpha = .6; ctx.fillStyle = col;
+    ctx.beginPath(); ctx.arc(s.x*W, s.y*H, s.r, 0, Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+}
 
-    <script src="script.js"></script>
+const buildingSeeds = [0.78,0.62,0.9,0.55,0.82,0.68,0.74,0.88,0.60,0.72,0.85,0.65,0.77,0.58,0.83,0.70,0.93,0.56,0.80,0.67];
+function drawSkyline(groundY, skyCol, buildCol, winCol, opacity=1) {
+  ctx.save(); ctx.globalAlpha = opacity;
+  const bCount = 20;
+  for (let i = 0; i < bCount; i++) {
+    const bw = W / bCount, bx = i*bw, bh = buildingSeeds[i]*H*.38;
+    ctx.fillStyle = buildCol; ctx.fillRect(bx, groundY-bh, bw-3, bh+2);
+    ctx.fillStyle = winCol;
+    for (let wy=groundY-bh+10; wy<groundY-16; wy+=14)
+      for (let wx=bx+5; wx<bx+bw-8; wx+=12)
+        if (Math.sin(wx*7.3+wy*3.1) > .25) ctx.fillRect(wx, wy, 5, 7);
+  }
+  ctx.restore();
+}
 
+let fogOff = 0;
+function drawFog(col, a) {
+  fogOff += .08; ctx.save(); ctx.globalAlpha = a;
+  for (let i=0; i<6; i++) {
+    ctx.fillStyle = col;
+    const fx = ((i*400 + fogOff*12) % (W+600)) - 300;
+    ctx.beginPath(); ctx.ellipse(fx, H*.68+Math.sin(i+fogOff*.01)*20, 400, 50, 0, 0, Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+}
 
-    <footer>
+function vignette() {
+  const g = ctx.createRadialGradient(W/2,H/2,H*.15,W/2,H/2,H*.9);
+  g.addColorStop(0,'transparent'); g.addColorStop(1,'rgba(0,0,0,.4)');
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+}
 
-    <p>
-        © 2026 Nalin Narayan
-    </p>
+// ════════════════════════════════════════
+// SCENES (unchanged from your working code)
+// ════════════════════════════════════════
 
-</footer>
+function sceneArrow(t) {
+  const g = ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#060e08'); g.addColorStop(1,'#0d1a0f');
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+  drawDust(true);
+  drawFog('rgba(34,197,94,0.05)',1);
+  drawSkyline(H*.72,'#0d1a0f','#080f09','rgba(255,220,100,0.12)');
+  const logoAlpha = clamp(t*3,0,1);
+  if (IMG_ARROW.complete && logoAlpha > 0) {
+    const lw = Math.min(W*.55,520), lh = lw*(IMG_ARROW.naturalHeight/IMG_ARROW.naturalWidth||.18);
+    ctx.save(); ctx.globalAlpha = logoAlpha*.9;
+    ctx.drawImage(IMG_ARROW, W/2-lw/2, H*.25-lh/2, lw, lh); ctx.restore();
+  }
+  const targetX=W*.68, targetY=H*.42;
+  const arrowX = lerp(-W*.1, targetX-20, easeOut(clamp(t*1.2,0,1)));
+  for (let i=0; i<40; i++) {
+    ctx.save(); ctx.globalAlpha = .035*(1-i/40); ctx.strokeStyle = '#4ade80'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(arrowX-i*52,targetY); ctx.lineTo(arrowX-i*52-160,targetY); ctx.stroke(); ctx.restore();
+  }
+  drawGlow(arrowX, targetY, 120,'rgba(74,222,128,.6)',.35);
+  ctx.save(); ctx.translate(arrowX, targetY); ctx.rotate(Math.sin(t*20)*.012);
+  ctx.fillStyle='#4ade80'; ctx.fillRect(-240,-3,270,6);
+  ctx.fillStyle='#ecfdf5'; ctx.beginPath(); ctx.moveTo(90,0); ctx.lineTo(42,-22); ctx.lineTo(42,22); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='#6ee7b7'; ctx.beginPath(); ctx.moveTo(-240,0); ctx.lineTo(-290,-24); ctx.lineTo(-264,0); ctx.lineTo(-290,24); ctx.closePath(); ctx.fill();
+  ctx.restore();
+  if (t > .55) {
+    const sa = easeOut(clamp((t-.55)*3,0,1));
+    ctx.save(); ctx.globalAlpha = sa;
+    const sx=W*.14, sy=H*.72-H*.12;
+    ctx.fillStyle='#050a06';
+    ctx.beginPath(); ctx.roundRect(sx-10,sy,20,48,2); ctx.fill();
+    ctx.beginPath(); ctx.arc(sx,sy-10,11,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(sx-16,sy-8); ctx.lineTo(sx,sy-24); ctx.lineTo(sx+16,sy-8); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle='#050a06'; ctx.lineWidth=3.5;
+    ctx.beginPath(); ctx.moveTo(sx+10,sy+6); ctx.lineTo(sx+46,sy-10); ctx.stroke();
+    ctx.strokeStyle='#4ade80'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(sx+46,sy-10,18,Math.PI*1.4,Math.PI*1.9,false); ctx.stroke();
+    ctx.restore();
+  }
+  if (t > .78) {
+    const imp = easeOut((t-.78)*5);
+    for (let r=0; r<6; r++) {
+      ctx.save(); ctx.globalAlpha=.07*(1-imp)*(1-r/6); ctx.strokeStyle='#86efac'; ctx.lineWidth=5;
+      ctx.beginPath(); ctx.arc(targetX,targetY,60+r*52+imp*180,0,Math.PI*2); ctx.stroke(); ctx.restore();
+    }
+  }
+  vignette();
+}
 
+function sceneFlash(t) {
+  const g = ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#0a0204'); g.addColorStop(1,'#180508');
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+  drawDust(true);
+  drawFog('rgba(251,191,36,0.07)',1);
+  drawSkyline(H*.74,'#180508','#0e0305','rgba(255,180,60,0.1)');
+  const la = clamp(t*3,0,1);
+  if (IMG_FLASH.complete && la > 0) {
+    const lw=Math.min(W*.7,680), lh=lw*(IMG_FLASH.naturalHeight/IMG_FLASH.naturalWidth||.22);
+    ctx.save(); ctx.globalAlpha=la*.85; ctx.drawImage(IMG_FLASH,W/2-lw/2,H*.22-lh/2,lw,lh); ctx.restore();
+  }
+  const fx=lerp(-W*.15,W*1.1,easeIn(t)), fy=H*.52;
+  ctx.save();
+  for (let b=0; b<8; b++) {
+    ctx.globalAlpha=Math.random()*.1; ctx.strokeStyle='#fbbf24'; ctx.lineWidth=1.5;
+    ctx.beginPath();
+    let lx=fx-300-b*90, ly=fy+Math.random()*60-30; ctx.moveTo(lx,ly);
+    for (let s=0; s<6; s++) { lx-=15+Math.random()*20; ly+=Math.random()*40-20; ctx.lineTo(lx,ly); }
+    ctx.stroke();
+  }
+  ctx.restore();
+  for (let i=0; i<45; i++) {
+    ctx.save(); ctx.globalAlpha=.045*(1-i/45);
+    ctx.strokeStyle=i%2===0?'#fbbf24':'#f59e0b'; ctx.lineWidth=3.5-i*.04;
+    ctx.beginPath(); ctx.moveTo(fx-i*55,fy+Math.sin(i*.9)*8); ctx.lineTo(fx-i*55-180,fy+Math.sin(i*.9)*8); ctx.stroke(); ctx.restore();
+  }
+  drawGlow(fx,fy,240,'rgba(251,191,36,.8)',.5);
+  ctx.save(); ctx.translate(fx,fy); ctx.rotate(-.1);
+  ctx.fillStyle='#991b1b'; ctx.beginPath(); ctx.roundRect(-22,-64,44,80,4); ctx.fill();
+  ctx.beginPath(); ctx.arc(0,-76,22,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fbbf24'; ctx.fillRect(-14,-80,10,5); ctx.fillRect(4,-80,10,5);
+  ctx.fillStyle='#b91c1c';
+  ctx.beginPath(); ctx.roundRect(-18,16,14,52,3); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(4,16,14,56,3); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(-44,-55,22,12,3); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(22,-55,22,12,3); ctx.fill();
+  ctx.fillStyle='#fbbf24';
+  ctx.beginPath(); ctx.moveTo(8,-50); ctx.lineTo(-4,-18); ctx.lineTo(4,-18); ctx.lineTo(-8,14); ctx.lineTo(4,14); ctx.lineTo(16,-18); ctx.lineTo(8,-18); ctx.closePath(); ctx.fill();
+  drawGlow(0,0,80,'rgba(251,191,36,.5)',.25);
+  ctx.restore();
+  vignette();
+}
+
+function sceneSupergirl(t) {
+  const g = ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0, lerpHex('#0a1628','#1e3a5f',t*.7));
+  g.addColorStop(.5, lerpHex('#141e30','#2d4a7a',t*.7));
+  g.addColorStop(1,'#0f172a');
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+  drawDust(true);
+  drawFog('rgba(96,165,250,0.06)',1);
+  drawSkyline(H*.78,'#0f172a','#0c1525','rgba(150,200,255,0.08)',.9);
+  const la = clamp(t*2.5,0,1);
+  if (IMG_SUPERGIRL.complete && la > 0) {
+    const lw=Math.min(W*.32,260), lh=lw*(IMG_SUPERGIRL.naturalHeight/IMG_SUPERGIRL.naturalWidth||.9);
+    ctx.save(); ctx.globalAlpha=la*.8; ctx.drawImage(IMG_SUPERGIRL,W*.5-lw/2,H*.18,lw,lh); ctx.restore();
+  }
+  const sx=lerp(W*1.3,W*.5,easeOut(t)), sy=lerp(H*1.2,H*.42,easeOut(t));
+  ctx.save();
+  for (let i=0; i<20; i++) {
+    ctx.globalAlpha=.025*(1-i/20); ctx.strokeStyle='#60a5fa'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(sx+i*40,sy+i*25); ctx.lineTo(sx+(i+1)*40,sy+(i+1)*25); ctx.stroke();
+  }
+  ctx.restore();
+  drawGlow(sx,sy,250,'rgba(96,165,250,.5)',.4);
+  vignette();
+}
+
+let noteY = Array.from({length:10}, (_, i) => ({
+  x:(i+.5)/10, y:Math.random(), sp:.0008+Math.random()*.0006, off:Math.random()*Math.PI*2
+}));
+let wt = 0;
+
+function sceneMusic(t) {
+  wt += .018;
+  const g = ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#1a0e06'); g.addColorStop(1,'#2a1508');
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+  drawDust(true);
+  drawFog('rgba(201,168,76,0.06)',1);
+  drawSkyline(H*.74,'#2a1508','#180c04','rgba(255,160,40,0.1)',1);
+  const cx=W/2, cy=H*.44;
+  for (let r=0; r<20; r++) {
+    const waveR=70+r*48+Math.sin(wt+r*.4)*12, a=clamp(.12-r*.005,0,.12)*t;
+    ctx.save(); ctx.globalAlpha=a;
+    ctx.strokeStyle=r%3===0?'#c9a84c':r%3===1?'#d4b86a':'#b8943e'; ctx.lineWidth=1.2;
+    ctx.beginPath(); ctx.arc(cx,cy,waveR,0,Math.PI*2); ctx.stroke(); ctx.restore();
+  }
+  drawGlow(cx,cy,280,'rgba(201,168,76,.4)',.35);
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(wt*.6);
+  for (let r=0; r<10; r++) {
+    ctx.beginPath(); ctx.arc(0,0,130-r*9,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(40,22,8,${.5+r*.03})`; ctx.lineWidth=5; ctx.stroke();
+  }
+  ctx.beginPath(); ctx.arc(0,0,130,0,Math.PI*2); ctx.fillStyle='#150a02'; ctx.fill();
+  ctx.beginPath(); ctx.arc(0,0,40,0,Math.PI*2);
+  const lg = ctx.createRadialGradient(0,0,0,0,0,40);
+  lg.addColorStop(0,'#3d1f08'); lg.addColorStop(1,'#2a1005');
+  ctx.fillStyle=lg; ctx.fill();
+  ctx.fillStyle='#c9a84c'; ctx.font=`700 9px 'DM Sans',sans-serif`; ctx.textAlign='center';
+  ctx.fillText('Hozier',0,2); ctx.fillText('◆',0,12);
+  ctx.beginPath(); ctx.arc(0,0,5,0,Math.PI*2); ctx.fillStyle='#080401'; ctx.fill();
+  ctx.restore();
+  noteY.forEach((n,i) => {
+    n.y -= n.sp; if (n.y < -.05) n.y = 1.1;
+    const nx=(n.x+Math.sin(wt*.25+n.off)*.04)*W, ny=n.y*H;
+    const a=(.25+.3*Math.sin(wt+n.off))*t;
+    const col=i%3===0?'#c9a84c':i%3===1?'#d4b86a':'#a37c36';
+    ctx.save(); ctx.translate(nx,ny); ctx.globalAlpha=a; ctx.fillStyle=col; ctx.strokeStyle=col; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.ellipse(0,0,8,6,-.35,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(7,-1); ctx.lineTo(7,-32); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(7,-32); ctx.quadraticCurveTo(26,-24,18,-12); ctx.stroke();
+    ctx.restore();
+  });
+  ctx.save(); ctx.globalAlpha=.03; ctx.fillStyle='#c9a84c';
+  ctx.font=`700 ${Math.floor(H*.06)}px 'Inter',sans-serif`; ctx.textAlign='left';
+  ctx.fillText('"Take Me To Church"',W*.05,H*.88); ctx.restore();
+  vignette();
+}
+
+const planeFleet = Array.from({length:3}, (_, i) => ({
+  x:-.1+i*.3, y:.18+i*.18, sp:.0006+i*.0003, sc:.35+i*.12, trail:[], wobble:Math.random()*Math.PI*2
+}));
+let planeGT = 0;
+
+function sceneAir(t) {
+  planeGT += .016;
+  const g = ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#020c1e'); g.addColorStop(.5,'#071428'); g.addColorStop(1,'#0f1b35');
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  drawDust(true);
+  drawFog('rgba(56,189,248,0.05)',1);
+  drawSkyline(H*.78,'#0f1b35','#080f1e','rgba(100,180,255,0.07)',.9);
+  ctx.save();
+  for (let i=0; i<60; i++) {
+    const sx=((i*137.5)%1)*W, sy=((i*89.3)%1)*H*.6;
+    const sa=.3+.4*Math.sin(planeGT+i*.8);
+    ctx.globalAlpha=sa*.6; ctx.fillStyle='#ffffff';
+    ctx.beginPath(); ctx.arc(sx,sy,Math.random()<.2?1.5:.7,0,Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+  planeFleet.forEach(pl => {
+    pl.x += pl.sp; if (pl.x > 1.2) pl.x = -.1;
+    const px=pl.x*W, py=pl.y*H+Math.sin(planeGT*.8+pl.wobble)*8;
+    pl.trail.push({x:px,y:py}); if (pl.trail.length>70) pl.trail.shift();
+    ctx.save();
+    for (let ti=1; ti<pl.trail.length; ti++) {
+      ctx.globalAlpha=.007*(ti/pl.trail.length)*t; ctx.strokeStyle='rgba(210,230,255,0.8)'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(pl.trail[ti-1].x,pl.trail[ti-1].y); ctx.lineTo(pl.trail[ti].x,pl.trail[ti].y); ctx.stroke();
+    }
+    ctx.restore();
+    if (IMG_PLANE.complete) {
+      const pw=140*pl.sc, ph=pw*(IMG_PLANE.naturalHeight/IMG_PLANE.naturalWidth||1);
+      ctx.save(); ctx.globalAlpha=.55*t; ctx.drawImage(IMG_PLANE,px-pw*.75,py-ph/2,pw,ph); ctx.restore();
+    }
+  });
+  const hpx=lerp(-W*.2,W*1.15,easeOut(clamp(t*1.1,0,1))), hpy=H*.38+Math.sin(planeGT*.5)*14;
+  drawGlow(hpx-W*.05,hpy,200,'rgba(56,189,248,.3)',.3);
+  if (IMG_PLANE.complete) {
+    const pw=Math.min(W*.38,380), ph=pw*(IMG_PLANE.naturalHeight/IMG_PLANE.naturalWidth||1);
+    ctx.save(); ctx.globalAlpha=.09*t;
+    const cg=ctx.createLinearGradient(hpx-pw,hpy,hpx-pw-600,hpy);
+    cg.addColorStop(0,'rgba(210,235,255,0.8)'); cg.addColorStop(1,'rgba(210,235,255,0)');
+    ctx.fillStyle=cg; ctx.fillRect(hpx-pw-600,hpy-2,600,4); ctx.restore();
+    ctx.save(); ctx.globalAlpha=.9; ctx.drawImage(IMG_PLANE,hpx-pw*.7,hpy-ph/2,pw,ph); ctx.restore();
+  }
+  vignette();
+}
+
+// ════════════════════════════════════════
+// MAIN LOOP
+// ════════════════════════════════════════
+let lastCh = -1;
+const storyH2  = document.getElementById('storyH2');
+const storySub = document.getElementById('storySub');
+const chTag    = document.getElementById('chapterTag');
+const pline    = document.getElementById('pline');
+
+function loop() {
+  gt += .016;
+  ctx.clearRect(0,0,W,H);
+
+  const scrollY    = window.scrollY;
+  const maxScroll  = document.body.scrollHeight - window.innerHeight;
+  const progress   = clamp(scrollY / maxScroll, 0, 1);
+
+  const cf = progress * CHAPTERS.length;
+  const ch = clamp(Math.floor(cf), 0, CHAPTERS.length-1);
+  const local = cf - ch;
+
+  // ── Chapter change ──
+  if (ch !== lastCh) {
+    lastCh = ch;
+    storyH2.textContent  = CHAPTERS[ch].h2;
+    storySub.textContent = CHAPTERS[ch].sub;
+    chTag.textContent    = CHAPTERS[ch].tag;
+    dots.forEach((d, i) => { d.className = 'cdot' + (i===ch?' on':''); });
+
+    // ── Auto-play when entering music chapter ──
+    if (ch === MUSIC_CHAPTER && userUnlocked && !hozierPlaying) {
+      hozierAudio.play().then(() => {
+        hozierPlaying = true;
+        scrollMusicOn = true;
+        musicCard.classList.add('playing');
+        fadeVolume(0.75);
+        showToast('♪ Now playing — Jackie & Wilson');
+      }).catch(() => {});
+    }
+
+    // ── Auto-pause when leaving music chapter ──
+    if (ch !== MUSIC_CHAPTER && scrollMusicOn && hozierPlaying) {
+      fadeVolume(0);
+      setTimeout(() => {
+        if (!hozierPlaying) return;
+        hozierAudio.pause();
+        hozierPlaying = false;
+        scrollMusicOn = false;
+        musicCard.classList.remove('playing');
+      }, 500);
+    }
+  }
+
+  pline.style.width = (progress * 100) + '%';
+
+  ctx.save();
+  ctx.translate(Math.sin(gt*.3)*3, Math.cos(gt*.25)*2);
+
+  if      (ch === 0) sceneArrow(local);
+  else if (ch === 1) sceneFlash(local);
+  else if (ch === 2) sceneSupergirl(local);
+  else if (ch === 3) sceneMusic(local);
+  else if (ch === 4) sceneAir(local);
+
+  ctx.restore();
+  requestAnimationFrame(loop);
+}
+
+// ── Unlock audio on first user interaction anywhere on the page ──
+// (needed because browsers block autoplay until a gesture happens)
+function unlock() {
+  if (userUnlocked) return;
+  userUnlocked = true;
+  // Load it so it's ready, but don't play yet
+  hozierAudio.load();
+  document.removeEventListener('click',    unlock);
+  document.removeEventListener('scroll',   unlock);
+  document.removeEventListener('keydown',  unlock);
+  document.removeEventListener('touchstart', unlock);
+}
+document.addEventListener('click',     unlock, { once:true });
+document.addEventListener('scroll',    unlock, { once:true });
+document.addEventListener('keydown',   unlock, { once:true });
+document.addEventListener('touchstart',unlock, { once:true });
+
+loop();
+</script>
 </body>
-
 </html>
