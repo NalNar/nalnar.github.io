@@ -21,7 +21,7 @@ function animatePath(el, done) {
   el.style.opacity          = '1';
   el.style.transition       = 'none';
   after(20, function () {
-    var dur = Math.max(350, len * 1.6);
+    var dur = Math.max(90, len * 0.5);
     el.style.transition        = 'stroke-dashoffset ' + dur + 'ms cubic-bezier(0.4,0,0.2,1)';
     el.style.strokeDashoffset  = '0';
     after(dur, done || function () {});
