@@ -1,8 +1,8 @@
 var FONT_URL = 'https://raw.githubusercontent.com/google/fonts/main/ofl/borel/Borel-Regular.ttf';
 var SVG_W       = 720;
-var HELLO_SIZE  = 148;
+var HELLO_SIZE  = 250;
 var HELLO_Y     = 168;
-var WD_SIZE     = 110;
+var WD_SIZE     = 200;
 var WD_Y        = 195;
 var STROKE_W    = 2;
 
