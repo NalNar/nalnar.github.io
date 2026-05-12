@@ -1,10 +1,3 @@
-import posthog from 'posthog-js'
-
-posthog.init('phc_wzTH2xXgFCypcF8phpQffq7KuG5Qike5F2vcpnvRrCdH', {
-    api_host: 'https://us.i.posthog.com',
-    defaults: '2026-01-30'
-})
-
 var FONT_URL = 'https://raw.githubusercontent.com/google/fonts/main/ofl/borel/Borel-Regular.ttf';
 var SVG_W       = 720;
 var HELLO_SIZE  = 148;
