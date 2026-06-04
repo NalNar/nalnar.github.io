@@ -112,7 +112,7 @@ opentype.load(FONT_URL, function (err, font) {
 
           /* 4. Dim hello */
           hGroup.style.transition = 'opacity 0.9s cubic-bezier(0.22,1,0.36,1)';
-          hGroup.style.opacity    = '0.18';
+          hGroup.style.opacity    = '0.19';
 
           after(350, function () {
 
