@@ -1,3 +1,4 @@
+<!-- DRUMBOX — Retro Drum Machine -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -444,6 +445,19 @@
   <div class="drums-grid" id="drumsGrid"></div>
 
   <div class="controls-row">
+        <div class="ctrl-card" style="flex-direction:row; gap:10px; align-items:center;">
+      <button class="btn accent-btn" id="recordBtn" onclick="toggleRecording()">
+        Record
+      </button>
+
+      <button class="btn" id="playRecordingBtn" onclick="playRecording()" disabled>
+        Play
+      </button>
+
+      <button class="btn" id="downloadBtn" onclick="downloadRecording()" disabled>
+        Download
+      </button>
+    </div>
     <div class="knob-group">
       <div class="knob" id="volKnob" title="Volume" data-min="0" data-max="1" data-value="0.8" style="--angle: 80deg"></div>
       <div class="knob-label">VOLUME</div>
@@ -474,6 +488,12 @@
 <footer>© 1979 DRUMBOX INDUSTRIES — ANALOG UNIT — ALL SOUNDS SYNTHESIZED</footer>
 
 <script>
+  let mediaDest;
+  let mediaRecorder;
+  let recordedChunks = [];
+  let recordedBlob = null;
+  let isRecording = false;
+
 const PADS = [
   { name: 'KICK', desc: '808 BASS DRUM', key: 'Q', icon: '🥁',
     color: '#C8410A', glow: 'rgba(200,65,10,0.5)',
