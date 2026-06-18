@@ -125,7 +125,7 @@ body::after{
   }
 }
 .nlogo{
-  font-family:'Oswald',sans-serif;
+  font-family:'Rajdhani',sans-serif;
 
   font-size:13px;
   letter-spacing:3px;
@@ -215,7 +215,7 @@ body::after{
 .hero-txt{position:relative;z-index:10;text-align:center;pointer-events:none;}
 
 .hero-eye{
-  font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:6px;
+  font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:6px;
   color:var(--txt2);text-transform:uppercase;margin-bottom:1.4rem;
   display:flex;align-items:center;justify-content:center;gap:18px;
 }
@@ -283,9 +283,20 @@ body::after{
 
 /* ── STATS ── */
 #stats{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  border-top:1px solid rgba(43,255,200,0.06);border-bottom:1px solid rgba(43,255,200,0.06);
-  background:var(--s1);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+}
+
+@media (max-width:768px){
+  #stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media (max-width:480px){
+  #stats{
+    grid-template-columns:1fr;
+  }
 }
 .stat{padding:2rem 1.5rem;border-right:1px solid rgba(43,255,200,0.05);text-align:center;}
 .stat:last-child{border-right:none;}
@@ -319,8 +330,12 @@ body::after{
 /* ── GAME WRAP ── */
 #gw{position:relative;width:100%;max-width:1200px;margin:0 auto;
   background:var(--s1);border-top:1px solid rgba(43,255,200,0.1);border-bottom:1px solid rgba(43,255,200,0.1);}
-#gc{display:block;width:100%;cursor:none;}
-
+#gc{
+  width:100%;
+  height:auto;
+  max-height:70vh;
+  touch-action:none;
+}
 /* ── HUD ── */
 #hud{position:absolute;top:0;left:0;right:0;pointer-events:none;
   display:flex;justify-content:space-between;align-items:flex-start;padding:14px 18px;}
@@ -394,6 +409,21 @@ footer{
   font-size:11px;letter-spacing:2px;text-transform:uppercase;
   color:var(--txt3);background:var(--s1);font-family:'Oswald',sans-serif;
 }
+@media (max-width:768px){
+
+footer{
+
+flex-direction:column;
+
+gap:12px;
+
+text-align:center;
+
+padding:24px;
+
+}
+
+}
 footer b{color:#7AB870;font-weight:600;font-family:'Cinzel',serif;letter-spacing:3px;}
 </style>
 </head>
@@ -416,9 +446,9 @@ footer b{color:#7AB870;font-weight:600;font-family:'Cinzel',serif;letter-spacing
   By day, I'm just another student.<br>
   By night, I become something else. I'm the developer
 </p>
-    <button class="hero-btn" onclick="document.getElementById('game-sec').scrollIntoView({behavior:'smooth'})">
+    <!-- <button class="hero-btn" onclick="document.getElementById('game-sec').scrollIntoView({behavior:'smooth'})">
       ↓ &nbsp; Enter the Arsenal
-    </button>
+    </button> -->
   </div>
   <div class="scroll-down" onclick="document.getElementById('game-sec').scrollIntoView({behavior:'smooth'})">
     <span>Aim Below</span><div class="chevron"></div>
@@ -427,9 +457,9 @@ footer b{color:#7AB870;font-weight:600;font-family:'Cinzel',serif;letter-spacing
 
 <div id="stats">
   <div class="stat"><div class="stat-n" id="sn1">0</div><div class="stat-l">Projects Deployed</div></div>
-  <div class="stat"><div class="stat-n" id="sn2">0</div><div class="stat-l">Bugs Eliminated</div></div>
-  <div class="stat"><div class="stat-n" id="sn3">0</div><div class="stat-l">Cities Protected</div></div>
-  <div class="stat"><div class="stat-n" id="sn4">0</div><div class="stat-l">Hours in the Cave</div></div>
+  <div class="stat"><div class="stat-n" id="sn2">0</div><div class="stat-l">Lines of Code Written</div></div>
+  <div class="stat"><div class="stat-n" id="sn3">0</div><div class="stat-l">Avg. Operation Hours</div></div>
+  <div class="stat"><div class="stat-n" id="sn4">0</div><div class="stat-l">Hours in the College</div></div>
 </div>
 
 <section id="game-sec">
@@ -834,9 +864,9 @@ const obs=new IntersectionObserver(entries=>{
   if(entries[0].isIntersecting){
     obs.disconnect();
     setTimeout(()=>countUp('sn1',4,'',900),0);
-    setTimeout(()=>countUp('sn2',847,'',1200),200);
-    setTimeout(()=>countUp('sn3',1,'',600),400);
-    setTimeout(()=>countUp('sn4',3000,'',1400),600);
+    setTimeout(()=>countUp('sn2',8703,'',1200),200);
+    setTimeout(()=>countUp('sn3',19.1,'',600),400);
+    setTimeout(()=>countUp('sn4',1440,'',1400),600);
   }
 },{threshold:.5});
 obs.observe(document.getElementById('stats'));
@@ -847,19 +877,30 @@ obs.observe(document.getElementById('stats'));
 (function(){
   const cv=document.getElementById('gc');
   const ctx=cv.getContext('2d');
-  const GW=1200, GH=560;
-  cv.width=GW; cv.height=GH;
 
+  const GW=1200;
+  const GH=560;
+
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+  cv.width = GW * DPR;
+  cv.height = GH * DPR;
+
+  cv.style.width = '100%';
+  cv.style.height = 'auto';
+
+  ctx.scale(DPR, DPR);
+  
   let T=0, mx=GW/2, my=GH/2;
   let arrows=[], particles=[], impacts=[], floatingTxt=[];
   let bowDraw=0, isDrawing=false;
-  let arrowsLeft=PROJECTS.length;
+  let arrowsLeft=PROJECTS.length*2;
 
   const rain2=[];
   for(let i=0;i<80;i++) rain2.push({x:Math.random()*GW,y:Math.random()*GH,s:5+Math.random()*6,l:12+Math.random()*14});
 
   const cols=[180,460,740,1020];
-  const targets=PROJECTS.map((p,i)=>({x:cols[i],y:GH*.45,r:48,hit:false,hitT:0,fp:i*1.4,proj:p}));
+  const targets=PROJECTS.map((p,i)=>({x:cols[i],y:GH*.45,r: window.innerWidth < 768 ? 65 : 48,hit:false,hitT:0,fp:i*1.4,proj:p}));
 
   /* ── game buildings — fully local array ── */
   const G_BLDGS=[];
@@ -1043,7 +1084,7 @@ obs.observe(document.getElementById('stats'));
           if(!tg.hit){
             tg.hit=true; tg.hitT=T;
             spawnImpact(a.tx,a.ty);
-            floatingTxt.push({x:a.tx,y:a.ty-60,txt:'BULLSEYE!',life:1,t:0});
+            // floatingTxt.push({x:a.tx,y:a.ty-60,txt:'BULLSEYE!',life:1,t:0});
             setTimeout(()=>openModal(a.hitIdx),500);
           }
         }
@@ -1136,7 +1177,48 @@ obs.observe(document.getElementById('stats'));
     else if(isDrawing)         msg.textContent='Hold... aim... release to fire';
     else                       msg.textContent='Move to aim — click & hold — release to fire';
   }
+function shootArrow(){
 
+  if(arrowsLeft<=0) return;
+
+  arrowsLeft--;
+
+  const BX=65;
+  const BY=GH-115;
+
+  let hitIdx=-1;
+
+  targets.forEach((tg,i)=>{
+
+    if(tg.hit) return;
+
+    const ey=tg.y+Math.sin(T*.013+tg.fp)*10;
+
+    const hitRadius=
+      window.innerWidth<768
+      ? tg.r+45
+      : tg.r+12;
+
+    if(dist(mx,my,tg.x,ey)<hitRadius){
+      hitIdx=i;
+    }
+    if(navigator.vibrate){
+  navigator.vibrate(20);
+}
+
+  });
+
+  arrows.push({
+    x:BX,
+    y:BY,
+    tx:mx,
+    ty:my,
+    t:0,
+    done:false,
+    hitIdx
+  });
+
+}
   function loop(){
     T++;
     if(isDrawing) bowDraw=Math.min(1,bowDraw+.055);
@@ -1162,28 +1244,42 @@ obs.observe(document.getElementById('stats'));
       targets.forEach((tg,i)=>{
         if(tg.hit)return;
         const ey=tg.y+Math.sin(T*.013+tg.fp)*10;
-        if(dist(mx,my,tg.x,ey)<tg.r+12) hitIdx=i;
+        const hitRadius=
+          window.innerWidth<768
+          ? tg.r+45
+          : tg.r+12;
+
+          if(dist(mx,my,tg.x,ey)<hitRadius)
+        hitIdx=i;
       });
       arrows.push({x:BX,y:BY,tx:mx,ty:my,t:0,done:false,hitIdx});
     }
   });
   cv.addEventListener('mouseleave',()=>{isDrawing=false;});
-  cv.addEventListener('touchstart',e=>{e.preventDefault();isDrawing=true;},{passive:false});
-  cv.addEventListener('touchmove',e=>{
-    e.preventDefault(); const p=getPos(e.touches[0]); mx=p.x; my=p.y;
-  },{passive:false});
-  cv.addEventListener('touchend',e=>{
-    e.preventDefault(); if(isDrawing){
-      isDrawing=false; if(arrowsLeft<=0)return; arrowsLeft--;
-      const BX=65,BY=GH-115; let hitIdx=-1;
-      targets.forEach((tg,i)=>{
-        if(tg.hit)return;
-        const ey=tg.y+Math.sin(T*.013+tg.fp)*10;
-        if(dist(mx,my,tg.x,ey)<tg.r+12) hitIdx=i;
-      });
-      arrows.push({x:BX,y:BY,tx:mx,ty:my,t:0,done:false,hitIdx});
-    }
-  },{passive:false});
+cv.addEventListener('touchstart',e=>{
+
+  e.preventDefault();
+
+  const p=getPos(e.touches[0]);
+
+  mx=p.x;
+  my=p.y;
+
+  shootArrow();
+
+},{passive:false});
+
+cv.addEventListener('touchmove',e=>{
+
+  e.preventDefault();
+
+  const p=getPos(e.touches[0]);
+
+  mx=p.x;
+  my=p.y;
+
+},{passive:false});
+
 })();
 
 /* ═══════════════════════════════════════════
