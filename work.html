@@ -26,6 +26,7 @@
   --logo1:#8FB87A;       /* highlight */
   --logo2:#5A8040;       /* mid */
   --logo3:#2A4020;       /* shadow */
+  --ease:cubic-bezier(.16,1,.3,1);
 }
 html,body{width:100%;height:100%;overflow-x:hidden;background:var(--blk);}
 body{font-family:'Rajdhani',sans-serif;color:var(--txt);}
@@ -42,6 +43,43 @@ body::after{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
   background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);
 }
+
+/* ── SCAN PROGRESS BAR — reads the page like a target lock ── */
+#scanbar{position:fixed;top:0;left:0;width:100%;height:2px;background:rgba(43,255,200,0.05);z-index:1100;}
+#scanbar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gd),var(--g));box-shadow:0 0 12px rgba(43,255,200,0.55);}
+#scanbar-pct{
+  position:fixed;top:8px;right:18px;z-index:1100;
+  font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:3px;
+  color:rgba(43,255,200,0.45);pointer-events:none;
+}
+
+/* ── CUSTOM CURSOR — you are always in someone's sights ── */
+#cur-ring,#cur-dot{position:fixed;top:0;left:0;pointer-events:none;z-index:1200;border-radius:50%;transform:translate(-50%,-50%);will-change:transform;}
+#cur-ring{width:30px;height:30px;border:1px solid rgba(43,255,200,0.45);transition:width .2s var(--ease),height .2s var(--ease),border-color .2s,background .2s,opacity .2s;}
+#cur-ring::before,#cur-ring::after{content:'';position:absolute;background:rgba(43,255,200,0.45);}
+#cur-ring::before{left:50%;top:-6px;width:1px;height:6px;transform:translateX(-50%);}
+#cur-ring::after{left:50%;bottom:-6px;width:1px;height:6px;transform:translateX(-50%);}
+#cur-ring.hov{width:52px;height:52px;border-color:rgba(43,255,200,0.85);background:rgba(43,255,200,0.06);}
+#cur-dot{width:3px;height:3px;background:var(--g);box-shadow:0 0 6px rgba(43,255,200,0.9);}
+body.has-cursor{cursor:none;}
+body.has-cursor a,body.has-cursor button,body.has-cursor .hero-btn{cursor:none;}
+@media (pointer:coarse){#cur-ring,#cur-dot{display:none!important;}}
+
+/* ── SCROLL REVEAL SYSTEM ── */
+.reveal{opacity:0;transform:translateY(38px);transition:opacity .85s var(--ease),transform .85s var(--ease);transition-delay:var(--d,0s);}
+.reveal.in{opacity:1;transform:translateY(0);}
+.reveal-clip{opacity:0;clip-path:inset(0 100% 0 0);transition:opacity .1s,clip-path .9s var(--ease);transition-delay:var(--d,0s);}
+.reveal-clip.in{opacity:1;clip-path:inset(0 0 0 0);}
+.reveal-scale{opacity:0;transform:scale(.92);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:var(--d,0s);}
+.reveal-scale.in{opacity:1;transform:scale(1);}
+
+@media (prefers-reduced-motion:reduce){
+  .reveal,.reveal-clip,.reveal-scale{opacity:1!important;transform:none!important;clip-path:none!important;transition:none!important;}
+  .hero-eye,.hero-h1,.hero-sub,.scroll-down{animation:none!important;opacity:1!important;transform:none!important;}
+  #cur-ring,#cur-dot{display:none!important;}
+  body.has-cursor{cursor:auto!important;}
+}
+
 #nav::before{
   content:'';
 
@@ -107,6 +145,16 @@ body::after{
     0 12px 40px rgba(0,0,0,.55);
 
   animation:navEnter .8s cubic-bezier(.16,1,.3,1);
+  transition:top .35s var(--ease),height .35s var(--ease),box-shadow .35s var(--ease),padding .35s var(--ease);
+}
+
+#nav.scrolled{
+  top:10px;
+  height:50px;
+  box-shadow:
+    0 0 0 1px rgba(57,255,20,.08),
+    0 0 34px rgba(57,255,20,.14),
+    0 14px 34px rgba(0,0,0,.65);
 }
 
 @keyframes navEnter{
@@ -159,7 +207,8 @@ body::after{
   letter-spacing:2px;
   text-transform:uppercase;
 
-  transition:all .25s ease;
+  transition:color .25s ease,background .25s ease,text-shadow .25s ease,transform .18s var(--ease);
+  display:inline-block;
 }
 
 .nlinks a:hover{
@@ -211,8 +260,8 @@ body::after{
 }
 /* ── HERO ── */
 #hero{height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;flex-direction:column;}
-#hero-canvas{position:absolute;inset:0;width:100%;height:100%;}
-.hero-txt{position:relative;z-index:10;text-align:center;pointer-events:none;}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;transition:opacity .2s linear,transform .2s linear;}
+.hero-txt{position:relative;z-index:10;text-align:center;pointer-events:none;transition:opacity .2s linear,transform .2s linear;}
 
 .hero-eye{
   font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:6px;
@@ -281,6 +330,19 @@ body::after{
 .chevron{width:16px;height:16px;border-right:1px solid rgba(43,255,200,0.5);border-bottom:1px solid rgba(43,255,200,0.5);transform:rotate(45deg);}
 @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(10px);}}
 
+/* hero load-in sequence — separate from scroll-reveal since it's above the fold on first paint */
+.hero-eye,.hero-h1,.hero-sub,.scroll-down{opacity:0;animation-name:heroIn;animation-duration:.9s;animation-timing-function:cubic-bezier(.16,1,.3,1);animation-fill-mode:forwards;}
+.hero-eye{animation-delay:.15s;}
+.hero-h1{animation-delay:.35s;}
+.hero-sub{animation-delay:.55s;}
+.scroll-down{animation-delay:1.15s;animation-duration:.7s;}
+@keyframes heroIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+.scroll-down{animation-name:bobIn;}
+@keyframes bobIn{
+  0%{opacity:0;transform:translateX(-50%) translateY(12px);}
+  100%{opacity:1;transform:translateX(-50%) translateY(0);}
+}
+
 /* ── STATS ── */
 #stats{
   display:grid;
@@ -324,7 +386,10 @@ body::after{
   width:60px;height:1px;background:rgba(43,255,200,0.4);
   margin:.9rem auto 1rem;
   box-shadow:0 0 8px rgba(43,255,200,0.3);
+  transform-origin:center;
 }
+.sec-hed .sec-line{transform:scaleX(0);transition:transform .7s var(--ease);transition-delay:.3s;}
+.sec-hed.in .sec-line{transform:scaleX(1);}
 .sec-p{font-size:13px;color:var(--txt2);letter-spacing:.5px;line-height:1.7;font-family:'Oswald',sans-serif;font-weight:300;}
 
 /* ── GAME WRAP ── */
@@ -429,6 +494,11 @@ footer b{color:#7AB870;font-weight:600;font-family:'Cinzel',serif;letter-spacing
 </head>
 <body>
 
+<div id="scanbar"><div id="scanbar-fill"></div></div>
+<div id="scanbar-pct">000%</div>
+<div id="cur-ring"></div>
+<div id="cur-dot"></div>
+
 <nav id="nav">
   <div class="nlinks">
     <a href="index.html">Home</a>
@@ -456,20 +526,20 @@ footer b{color:#7AB870;font-weight:600;font-family:'Cinzel',serif;letter-spacing
 </section>
 
 <div id="stats">
-  <div class="stat"><div class="stat-n" id="sn1">0</div><div class="stat-l">Projects Deployed</div></div>
-  <div class="stat"><div class="stat-n" id="sn2">0</div><div class="stat-l">Lines of Code Written</div></div>
-  <div class="stat"><div class="stat-n" id="sn3">0</div><div class="stat-l">Avg. Operation Hours</div></div>
-  <div class="stat"><div class="stat-n" id="sn4">0</div><div class="stat-l">Hours in the College</div></div>
+  <div class="stat reveal" style="--d:0s"><div class="stat-n" id="sn1">0</div><div class="stat-l">Projects Deployed</div></div>
+  <div class="stat reveal" style="--d:.08s"><div class="stat-n" id="sn2">0</div><div class="stat-l">Lines of Code Written</div></div>
+  <div class="stat reveal" style="--d:.16s"><div class="stat-n" id="sn3">0</div><div class="stat-l">Avg. Operation Hours</div></div>
+  <div class="stat reveal" style="--d:.24s"><div class="stat-n" id="sn4">0</div><div class="stat-l">Hours in the College</div></div>
 </div>
 
 <section id="game-sec">
-  <div class="sec-hed">
+  <div class="sec-hed reveal">
     <div class="sec-eye">// The Arsenal</div>
     <h2 class="sec-h2">Aim. Draw. Fire. Open.</h2>
     <div class="sec-line"></div>
-    <p class="sec-p">Move to aim · Click &amp; hold to draw the bow · Release to fire · Hit a target to open the project</p>
+    <p class="sec-p">Move to aim · Click &amp; hold to draw the bow · Release to fire · Hit a target to open the project — shoot it again anytime to reopen</p>
   </div>
-  <div id="gw">
+  <div id="gw" class="reveal-scale">
     <canvas id="gc"></canvas>
     <div id="hud">
       <div class="hud-l" id="hudtxt">// Star City Range</div>
@@ -495,7 +565,7 @@ footer b{color:#7AB870;font-weight:600;font-family:'Cinzel',serif;letter-spacing
   </div>
 </div>
 
-<footer>
+<footer class="reveal">
   <b>Nalin Narayan</b>
   <span>© 2026</span>
   <span>The mission never ends.</span>
@@ -509,10 +579,14 @@ const PROJECTS = [
   {tag:'// Project 02',title:'WorkBoard',icon:'📋',
    desc:'Brutalist project management for people who hate project management. No fluff. No onboarding. Just tasks, deadlines, and cold hard truth.',
    techs:['Vue.js','Supabase','PostgreSQL','Figma'],link:'projects/wb.html'},
-  {tag:'// Project 03',title:'Drum Machine',icon:'🎛️',
+  {tag:'// Project 03',title:'To-Do List',icon:'📋',
+   desc:'Brutalist project management for people who hate project management. No fluff. No onboarding. Just tasks, deadlines, and cold hard truth.',
+   techs:['Vue.js','Supabase','PostgreSQL','Figma'],link:'projects/ToDo/my-react-app/dist/'},
+  
+   {tag:'// Project 04',title:'Drum Machine',icon:'🎛️',
    desc:'Old school meets new school. Classic MPC-style beat sequencer rebuilt for the browser — 16-step grid, sample pads, swing quantisation, maximum vibe.',
    techs:['Vanilla JS','Web Audio API','CSS Grid','Canvas'],link:'projects/drumM.html'},
-  {tag:'// Project 04',title:'Balance Sheet AI',icon:'📊',
+  {tag:'// Project 05',title:'Balance Sheet AI',icon:'📊',
    desc:'Drag in a financial statement, get back clarity. AI reads the numbers, flags anomalies, and explains what the balance sheet actually means — in English, not accountant.',
    techs:['Python','Claude API','Pandas','Chart.js'],link:'projects/balance_sheet_analyzer.html'}
 ];
@@ -894,13 +968,13 @@ obs.observe(document.getElementById('stats'));
   let T=0, mx=GW/2, my=GH/2;
   let arrows=[], particles=[], impacts=[], floatingTxt=[];
   let bowDraw=0, isDrawing=false;
-  let arrowsLeft=PROJECTS.length*2;
+  let arrowsLeft=PROJECTS.length*3;
 
   const rain2=[];
   for(let i=0;i<80;i++) rain2.push({x:Math.random()*GW,y:Math.random()*GH,s:5+Math.random()*6,l:12+Math.random()*14});
 
-  const cols=[180,460,740,1020];
-  const targets=PROJECTS.map((p,i)=>({x:cols[i],y:GH*.45,r: window.innerWidth < 768 ? 65 : 48,hit:false,hitT:0,fp:i*1.4,proj:p}));
+  const cols=[120,360,600,840,1080];
+  const targets=PROJECTS.map((p,i)=>({x:cols[i],y:GH*.45,r: window.innerWidth < 768 ? 55 : 42,hit:false,hitT:0,fp:i*1.4,proj:p}));
 
   /* ── game buildings — fully local array ── */
   const G_BLDGS=[];
@@ -1005,7 +1079,7 @@ obs.observe(document.getElementById('stats'));
     ctx.fillText(tg.proj.title.toUpperCase(),tg.x,labelY);
     ctx.fillStyle=tg.hit?'rgba(57,255,20,0.25)':'rgba(57,255,20,0.4)';
     ctx.font='10px Rajdhani';
-    ctx.fillText(tg.hit?'✓ OPENED':'[ SHOOT TO OPEN ]',tg.x,labelY-16);
+    ctx.fillText(tg.hit?'[ SHOOT TO REOPEN ]':'[ SHOOT TO OPEN ]',tg.x,labelY-16);
     if(tg.hit){
       ctx.font='bold 22px sans-serif'; ctx.textAlign='center';
       ctx.fillStyle=`rgba(57,255,20,${.7+.3*Math.sin(T*.1)})`;
@@ -1081,12 +1155,9 @@ obs.observe(document.getElementById('stats'));
         a.done=true;
         if(a.hitIdx>=0){
           const tg=targets[a.hitIdx];
-          if(!tg.hit){
-            tg.hit=true; tg.hitT=T;
-            spawnImpact(a.tx,a.ty);
-            // floatingTxt.push({x:a.tx,y:a.ty-60,txt:'BULLSEYE!',life:1,t:0});
-            setTimeout(()=>openModal(a.hitIdx),500);
-          }
+          tg.hit=true; tg.hitT=T;
+          spawnImpact(a.tx,a.ty);
+          setTimeout(()=>openModal(a.hitIdx),500);
         }
       }
     });
@@ -1190,8 +1261,6 @@ function shootArrow(){
 
   targets.forEach((tg,i)=>{
 
-    if(tg.hit) return;
-
     const ey=tg.y+Math.sin(T*.013+tg.fp)*10;
 
     const hitRadius=
@@ -1242,7 +1311,6 @@ function shootArrow(){
       isDrawing=false; if(arrowsLeft<=0)return; arrowsLeft--;
       const BX=65,BY=GH-115; let hitIdx=-1;
       targets.forEach((tg,i)=>{
-        if(tg.hit)return;
         const ey=tg.y+Math.sin(T*.013+tg.fp)*10;
         const hitRadius=
           window.innerWidth<768
@@ -1300,6 +1368,102 @@ function openModal(idx){
 function closeM(){document.getElementById('modal-bg').classList.remove('open');}
 document.getElementById('mclose').addEventListener('click',closeM);
 document.getElementById('modal-bg').addEventListener('click',function(e){if(e.target===this)closeM();});
+</script>
+
+<script>
+/* ═══════════════════════════════════════════
+   SCROLL FX — progress scan bar, nav condense,
+   parallax hero fade, section reveals, and a
+   trailing target-lock cursor. All respect
+   prefers-reduced-motion (see CSS block).
+═══════════════════════════════════════════ */
+(function(){
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── scan progress bar ── */
+  const fill = document.getElementById('scanbar-fill');
+  const pctEl = document.getElementById('scanbar-pct');
+  const nav = document.getElementById('nav');
+  const heroCanvas = document.getElementById('hero-canvas');
+  const heroTxt = document.querySelector('.hero-txt');
+  const heroSection = document.getElementById('hero');
+
+  function onScroll(){
+    const doc = document.documentElement;
+    const scrollable = doc.scrollHeight - doc.clientHeight;
+    const pct = scrollable > 0 ? Math.min(1, window.scrollY / scrollable) : 0;
+    fill.style.width = (pct * 100).toFixed(1) + '%';
+    pctEl.textContent = String(Math.round(pct * 100)).padStart(3,'0') + '%';
+
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+
+    /* hero parallax fade — sinks + dims as you leave the range */
+    if(!reduceMotion){
+      const hh = heroSection.offsetHeight;
+      const p2 = Math.min(1, window.scrollY / (hh * 0.85));
+      heroCanvas.style.opacity = String(1 - p2 * 0.6);
+      heroCanvas.style.transform = `scale(${1 + p2 * 0.06})`;
+      heroTxt.style.opacity = String(1 - p2 * 1.1);
+      heroTxt.style.transform = `translateY(${p2 * 60}px)`;
+    }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  /* ── scroll-triggered reveals ── */
+  const revealEls = document.querySelectorAll('.reveal, .reveal-clip, .reveal-scale');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, {threshold:.18, rootMargin:'0px 0px -60px 0px'});
+  revealEls.forEach(el=>io.observe(el));
+
+  /* ── custom trailing cursor — desktop, fine pointer only ── */
+  const canUseCursor = window.matchMedia('(pointer:fine)').matches && !reduceMotion;
+  if(canUseCursor){
+    document.body.classList.add('has-cursor');
+    const ring = document.getElementById('cur-ring');
+    const dot = document.getElementById('cur-dot');
+    let mx=window.innerWidth/2, my=window.innerHeight/2;
+    let rx=mx, ry=my;
+    window.addEventListener('mousemove', e=>{
+      mx=e.clientX; my=e.clientY;
+      dot.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`;
+    });
+    function curLoop(){
+      rx += (mx-rx)*0.16;
+      ry += (my-ry)*0.16;
+      ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+      requestAnimationFrame(curLoop);
+    }
+    curLoop();
+    const hoverables = document.querySelectorAll('a, button, .hero-btn, #gc, .apip');
+    hoverables.forEach(el=>{
+      el.addEventListener('mouseenter', ()=>ring.classList.add('hov'));
+      el.addEventListener('mouseleave', ()=>ring.classList.remove('hov'));
+    });
+  } else {
+    document.getElementById('cur-ring').style.display='none';
+    document.getElementById('cur-dot').style.display='none';
+  }
+
+  /* ── magnetic nav links — subtle pull toward the cursor ── */
+  if(canUseCursor){
+    document.querySelectorAll('.nlinks a').forEach(link=>{
+      link.addEventListener('mousemove', e=>{
+        const r = link.getBoundingClientRect();
+        const relX = e.clientX - r.left - r.width/2;
+        const relY = e.clientY - r.top - r.height/2;
+        link.style.transform = `translate(${relX*0.18}px, ${relY*0.35}px)`;
+      });
+      link.addEventListener('mouseleave', ()=>{ link.style.transform=''; });
+    });
+  }
+})();
 </script>
 </body>
 </html>
